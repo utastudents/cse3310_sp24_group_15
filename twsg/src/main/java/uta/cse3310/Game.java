@@ -5,10 +5,12 @@ public class Game {
     PlayerType Players;
     public PlayerType CurrentTurn;
     public PlayerType[] Button;
-    // Buttons are indexed 0 to 8 in the code
-    // 0 1 2
-    // 3 4 5
-    // 6 7 8
+    // Buttons are indexed 0 to 2499 in the code
+    // 0    1   2   .. 49
+    // 50   51  52  .. 99
+    // 100  101 102 .. 149
+    // ..   ..  ..  .. ..
+    // 2450 ..  ..  .. 2499
 
     public String[] Msg;
     public int GameId;
@@ -16,9 +18,9 @@ public class Game {
 
     Game(Statistics s) {
         Stats = s;
-        Button = new PlayerType[9];
+        Button = new PlayerType[2500];
         // initialize it
-        ResetBoard();
+        setBoard();
 
         Players = PlayerType.XPLAYER;
         CurrentTurn = PlayerType.NOPLAYER;
@@ -29,8 +31,10 @@ public class Game {
         Msg[1] = "";
     }
 
-    public void ResetBoard() {
+    public void initializeBoard() {
         // initializes the board to NOPLAYER in all spots
+        // then sets the words in the grid
+        // then fills the rest with random letters
         for (int i = 0; i < Button.length; i++) {
             Button[i] = PlayerType.NOPLAYER;
         }
@@ -51,6 +55,7 @@ public class Game {
     public void PrintGame() {
         // this method is used for debugging only
         // sometimes you want to see a picture of what is going on
+        // NEEDS TO BE UPDATED FOR THE 50X50 GRID
         System.out.println(Button[0].toString() + " " + Button[1].toString() + " " + Button[2].toString());
         System.out.println(Button[3].toString() + " " + Button[4].toString() + " " + Button[5].toString());
         System.out.println(Button[6].toString() + " " + Button[7].toString() + " " + Button[8].toString());
@@ -68,8 +73,8 @@ public class Game {
 
     public void StartGame() {
         // X player goes first. Because that is how it is.
-        Msg[0] = "You are X. Your turn";
-        Msg[1] = "You are O. Other players turn";
+        Msg[0] = "You are color [player1_color].";
+        Msg[1] = "You are color [player2_color].";
         CurrentTurn = PlayerType.XPLAYER;
         Stats.setGamesInProgress(Stats.getGamesInProgress() + 1);
     }
@@ -152,21 +157,18 @@ public class Game {
                 Msg[0] = "You Win!";
                 Msg[1] = "You Lose!";
                 CurrentTurn = PlayerType.NOPLAYER;
-                Stats.setXWins(Stats.getXWins() + 1);
                 Stats.setGamesInProgress(Stats.getGamesInProgress() - 1);
                 Stats.setTotalGames(Stats.getTotalGames() + 1);
             } else if (CheckBoard(PlayerType.OPLAYER)) {
                 Msg[1] = "You Win!";
                 Msg[0] = "You Lose!";
                 CurrentTurn = PlayerType.NOPLAYER;
-                Stats.setOWins(Stats.getOWins() + 1);
                 Stats.setGamesInProgress(Stats.getGamesInProgress() - 1);
                 Stats.setTotalGames(Stats.getTotalGames() + 1);
             } else if (CheckDraw(U.PlayerIdx)) {
                 Msg[0] = "Draw";
                 Msg[1] = "Draw";
                 CurrentTurn = PlayerType.NOPLAYER;
-                Stats.setDraws(Stats.getDraws() + 1);
                 Stats.setGamesInProgress(Stats.getGamesInProgress() - 1);
                 Stats.setTotalGames(Stats.getTotalGames() + 1);
             }
