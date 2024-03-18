@@ -3,7 +3,6 @@ package uta.cse3310;
 public class Game {
 
     PlayerType Players;
-    public PlayerType CurrentTurn;
     public PlayerType[] Button;
     // Buttons are indexed 0 to 2499 in the code
     // 0    1   2   .. 49
@@ -20,10 +19,9 @@ public class Game {
         Stats = s;
         Button = new PlayerType[2500];
         // initialize it
-        setBoard();
+        initializeBoard();
 
         Players = PlayerType.XPLAYER;
-        CurrentTurn = PlayerType.NOPLAYER;
         // Shown to the user, 0 is XPLAYER
         // 1 is OPLAYER
         Msg = new String[2];
@@ -75,7 +73,6 @@ public class Game {
         // X player goes first. Because that is how it is.
         Msg[0] = "You are color [player1_color].";
         Msg[1] = "You are color [player2_color].";
-        CurrentTurn = PlayerType.XPLAYER;
         Stats.setGamesInProgress(Stats.getGamesInProgress() + 1);
     }
 
@@ -100,20 +97,6 @@ public class Game {
         return CheckHorizontal(player) || CheckVertical(player) || CheckDiagonal(player);
     }
 
-    public boolean CheckDraw(PlayerType player) {
-        // It is a draw if neither player has won.
-        boolean retval = false;
-
-        // More specifically, it is a draw if no-one has won, and there
-        // are not spots that have not been taken.
-        if (OpenSpots() == 0 && !(CheckBoard(uta.cse3310.PlayerType.OPLAYER)
-                || CheckBoard(uta.cse3310.PlayerType.XPLAYER))) {
-            retval = true;
-        }
-
-        return retval;
-    }
-
     // This function returns an index for each player
     // It does not depend on the representation of Enums
     public int PlayerToIdx(PlayerType P) {
@@ -127,52 +110,12 @@ public class Game {
     }
 
     public void Update(UserEvent U) {
-        // System.out.println("The user event is " + U.PlayerIdx + " " + U.Button);
 
-        if ((CurrentTurn == U.PlayerIdx) && (CurrentTurn == PlayerType.OPLAYER || CurrentTurn == PlayerType.XPLAYER)) {
-            // Move is legitimate, lets do what was requested
+        //check valid positions for the two clicks (valid move check)
+        //check if word valid if passes test above (valid move check)
+        //if word is valid do the apporopriate functions
+        //if there are no words in the word list calculate winner
 
-            // Note that a button is going to be set for every UserEvent !
-
-            // Is the button not taken by X or O?
-            if (Button[U.Button] == PlayerType.NOPLAYER) {
-                // System.out.println("the button was 0, setting it to" + U.PlayerIdx);
-                Button[U.Button] = U.PlayerIdx;
-                if (U.PlayerIdx == PlayerType.OPLAYER) {
-                    CurrentTurn = PlayerType.XPLAYER;
-                    Msg[1] = "Other Players Move.";
-                    Msg[0] = "Your Move.";
-                } else {
-                    CurrentTurn = PlayerType.OPLAYER;
-                    Msg[0] = "Other Players Move.";
-                    Msg[1] = "Your Move.";
-                }
-            } else {
-                Msg[PlayerToIdx(U.PlayerIdx)] = "Not a legal move.";
-            }
-
-            // Check for winners, losers, and a draw
-
-            if (CheckBoard(PlayerType.XPLAYER)) {
-                Msg[0] = "You Win!";
-                Msg[1] = "You Lose!";
-                CurrentTurn = PlayerType.NOPLAYER;
-                Stats.setGamesInProgress(Stats.getGamesInProgress() - 1);
-                Stats.setTotalGames(Stats.getTotalGames() + 1);
-            } else if (CheckBoard(PlayerType.OPLAYER)) {
-                Msg[1] = "You Win!";
-                Msg[0] = "You Lose!";
-                CurrentTurn = PlayerType.NOPLAYER;
-                Stats.setGamesInProgress(Stats.getGamesInProgress() - 1);
-                Stats.setTotalGames(Stats.getTotalGames() + 1);
-            } else if (CheckDraw(U.PlayerIdx)) {
-                Msg[0] = "Draw";
-                Msg[1] = "Draw";
-                CurrentTurn = PlayerType.NOPLAYER;
-                Stats.setGamesInProgress(Stats.getGamesInProgress() - 1);
-                Stats.setTotalGames(Stats.getTotalGames() + 1);
-            }
-        }
     }
 
     public void Tick() {
