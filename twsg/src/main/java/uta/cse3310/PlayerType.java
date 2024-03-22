@@ -1,8 +1,8 @@
 package uta.cse3310;
 
-// A player can be an X or an O
+// A player can be blue or red
 
 public enum PlayerType {
-    NOPLAYER, XPLAYER, OPLAYER
+    NOPLAYER, bluePLAYER, redPLAYER
 }
  

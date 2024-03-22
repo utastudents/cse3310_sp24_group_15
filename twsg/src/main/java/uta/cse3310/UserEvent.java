@@ -3,7 +3,7 @@ package uta.cse3310;
 
 public class UserEvent {
     int GameId; // the game ID on the server
-    PlayerType PlayerIdx; // either an XPLAYER or an OPLAYER
+    PlayerType PlayerIdx; // either an bluePLAYER or redPLAYER
     int Button; // button number from 0 to 2499
 
     UserEvent() {

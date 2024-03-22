@@ -60,7 +60,7 @@ public class App extends WebSocketServer {
       // search for a game needing a player
       Game G = null;
       for (Game i : ActiveGames) {
-        if (i.Players == uta.cse3310.PlayerType.XPLAYER) {
+        if (i.Players == uta.cse3310.PlayerType.bluePLAYER) {
           G = i;
           System.out.println("found a match");
         }
@@ -72,13 +72,13 @@ public class App extends WebSocketServer {
         G.GameId = GameId;
         GameId++;
         // Add the first player
-        G.Players = PlayerType.XPLAYER;
+        G.Players = PlayerType.bluePLAYER;
         ActiveGames.add(G);
         System.out.println(" creating a new Game");
       } else {
         // join an existing game
         System.out.println(" not a new game");
-        G.Players = PlayerType.OPLAYER;
+        G.Players = PlayerType.redPLAYER;
         G.StartGame();
       }
   

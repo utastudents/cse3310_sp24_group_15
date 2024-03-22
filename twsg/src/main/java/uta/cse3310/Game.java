@@ -21,9 +21,9 @@ public class Game {
         // initialize it
         initializeBoard();
 
-        Players = PlayerType.XPLAYER;
-        // Shown to the user, 0 is XPLAYER
-        // 1 is OPLAYER
+        Players = PlayerType.bluePLAYER;
+        // Shown to the user, 0 is bluePLAYER
+        // 1 is redPLAYER
         Msg = new String[2];
         Msg[0] = "Waiting for other player to join";
         Msg[1] = "";
@@ -33,21 +33,6 @@ public class Game {
         // initializes the board to NOPLAYER in all spots
         // then sets the words in the grid
         // then fills the rest with random letters
-        for (int i = 0; i < Button.length; i++) {
-            Button[i] = PlayerType.NOPLAYER;
-        }
-    }
-
-    public int OpenSpots() {
-        // counts the number of spots that neither
-        // O or X has taken.
-        int count = 0;
-        for (PlayerType i : Button) {
-            if (i == PlayerType.NOPLAYER) {
-                count++;
-            }
-        }
-        return count;
     }
 
     public void PrintGame() {
@@ -70,38 +55,48 @@ public class Game {
     }
 
     public void StartGame() {
-        // X player goes first. Because that is how it is.
+        // will start the game and give players their color for the game
         Msg[0] = "You are color [player1_color].";
         Msg[1] = "You are color [player2_color].";
         Stats.setGamesInProgress(Stats.getGamesInProgress() + 1);
     }
 
-    private boolean CheckLine(int i, int j, int k, PlayerType player) {
-        // Checks to see if 3 squares are the same player
-        return player == Button[i] && player == Button[j] && player == Button[k];
+    private boolean CheckLine(int[] a, int[] b) {
+        // Uses the checks to see if the word is from the word list
+        // Takes in the two button arrays the player selects
+        // CheckHorizontal();
+        // CheckDiagonal();
+        // CheckVertical();
+        // will return boolean from the check
+        // If the two button arrays do not meet the horizontal
+        // diagonal or vertical check it will return false
+        return true;
     }
 
-    private boolean CheckHorizontal(PlayerType player) {
-        return CheckLine(0, 1, 2, player) || CheckLine(3, 4, 5, player) || CheckLine(6, 7, 8, player);
+    private boolean CheckHorizontal(int[] a, int[] b) {
+        //checks horizontal word with word bank
+        //returns boolean
+        return true;
     }
 
-    private boolean CheckVertical(PlayerType player) {
-        return CheckLine(0, 3, 6, player) || CheckLine(1, 4, 7, player) || CheckLine(2, 5, 8, player);
+    private boolean CheckVertical(int[] a, int[] b) {
+        //checks vertical word with word bank
+        //returns boolean
+        return true;
     }
 
-    private boolean CheckDiagonal(PlayerType player) {
-        return CheckLine(0, 4, 8, player) || CheckLine(2, 4, 6, player);
+    private boolean CheckDiagonal(int[] a, int[] b) {
+        //checks diagonal word with word bank
+        //returns boolean
+        return true;
     }
 
-    public boolean CheckBoard(PlayerType player) {
-        return CheckHorizontal(player) || CheckVertical(player) || CheckDiagonal(player);
-    }
 
     // This function returns an index for each player
     // It does not depend on the representation of Enums
     public int PlayerToIdx(PlayerType P) {
         int retval = 0;
-        if (P == PlayerType.XPLAYER) {
+        if (P == PlayerType.bluePLAYER) {
             retval = 0;
         } else {
             retval = 1;
