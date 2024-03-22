@@ -104,6 +104,20 @@ public class Game {
         return retval;
     }
 
+    // Method to add a player to the waiting list
+    // F: void, UREQ023
+    public void addWaitingPlayer(String playerNickname) {
+        //add the player on the waiting list
+    }
+     // Method to start the game when there are two waiting players
+    // F: void, UREQ026
+    public void twoPlayerStartGame() {
+     //check if there is two player in the waiting list 
+     // if there two player in the waiting list is set the game to start
+    }
+
+
+
     public void Update(UserEvent U) {
 
         //check valid positions for the two clicks (valid move check)
@@ -118,6 +132,46 @@ public class Game {
         // timer is needed.
 
     }
+     // Method to register a new player with a nickname
+    // NF: boolean, UREQ018
+    public boolean registerPlayer(String nickname) {
+
+
+      //if the existing user namer contain nickname 
+      //print that the name is already been taken and return false
+      //if the name is not yet being picked then we add the name nickname and return the true 
+       
+    }
+      // Method to sign in a player with a nickname
+    // F: boolean, UREQ021
+    public boolean signInPlayer(String nickname) {
+         
+         //if the exist username contain the nickname
+         // Add the player to the waiting list upon successful sign-in
+         // Successful login or in another way return true
+         //else print not found and return false
+    
+    }
+     public void startWordSelection(int row, int col, String playerId) {
+        // Logic to start selecting a word
+    }
+    
+     public void selectLetter(int row, int col, String playerId) {
+        // Logic to handle letter selection and word highlighting
+    }
+    
+   public void endWordSelection(int row, int col, String playerId) {
+        // Logic to end word selection and determine the winner
+    }
+     public void promptStartLetter() {
+        // Logic to prompt players of the start letter
+    }
+       // Method to print the winner of the game
+    // F: void
+    public void printWinner(String winner) {
+       //implement the one that win 
+    }
+
 }
 // In windows, shift-alt-F formats the source code
 // In linux, it is ctrl-shift-I
