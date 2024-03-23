@@ -1,4 +1,14 @@
-public class WordSearchGame {
+package uta.cse3310;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/*
+ * LIST OF METHODS BEFORE SORTING INTO USED .JAVA SOURCE FILES
+ * THESE ARE NOT THE METHODS USED, JUST THE EARLY ITERATIONS TO KEEP
+ * TRACK OF WHAT WE NEED TO IMPLEMENT
+*/
+public class Methods{
 
     // Method to display the letter grid to both players
     public void displayLetterGrid(char[][] grid) {
@@ -48,21 +58,6 @@ public class WordSearchGame {
     // Method to start the game with two players
     public void startGame() {
         // Implementation to start the game
-    }
-
-    // Method to display the Player Waiting List
-    public void displayPlayerWaitingList(List<String> waitingList) {
-        // Implementation to display the waiting list
-    }
-
-    // Method to update and display a player's score
-    public void displayPlayerScore(String nickname, int score) {
-        // Implementation to display a player's score
-    }
-
-    // Method to end the game
-    public void endGame() {
-        // Implementation to end the game
     }
 
     // Method to display the winner

@@ -1,5 +1,7 @@
 package uta.cse3310;
 
+import java.util.List;
+
 public class Game {
 
     PlayerType Players;
@@ -174,6 +176,12 @@ public class Game {
     // F: void
     public void printWinner(String winner) {
        //implement the one that win 
+    }
+
+        // Method to provide a word list to each user
+    public List<String> generateWordList() {
+        // Implementation to generate and return a word list
+        return null;
     }
 
 }
