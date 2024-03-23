@@ -140,6 +140,8 @@ public class Game {
       //if the existing user namer contain nickname 
       //print that the name is already been taken and return false
       //if the name is not yet being picked then we add the name nickname and return the true 
+
+      return true;
        
     }
       // Method to sign in a player with a nickname
@@ -150,6 +152,8 @@ public class Game {
          // Add the player to the waiting list upon successful sign-in
          // Successful login or in another way return true
          //else print not found and return false
+
+         return true;
     
     }
      public void startWordSelection(int row, int col, String playerId) {
