@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplayer Word Search Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>The WordSearchGame</h1>
@@ -12,14 +13,17 @@
         <input type="text" id="nickname">
         <button onclick="joinLobby()">submit</button>
     </div>
-    <div id="waitingPlayersList" style="display: none;">
+    <div id="waitingPlayersList" style="display:none;">
         <h2>Waiting Players:</h2>
         <ul id="playersList"></ul>
         <button onclick="startGame()">Play with 2 Players</button>
     </div>
+    <div class="buttonTable" id="gameTable" style="display:none;">
+        
+    </div>
     
     <script >
-      let socket = new WebSocket("ws://your-server-address:port");
+      let socket = new WebSocket("ws://" + location.host + ":9880");
 
 socket.onopen = function(event) {
     console.log("Connection established.");
@@ -32,13 +36,51 @@ socket.onmessage = function(event) {
     }
 };
 
+function makeTable(){
+
+    var gameTable = document.getElementById("gameTable");
+
+    for(var row = 1; row < 21; row++){
+        for(var col = 1; col < 21; col++){
+
+            var button = document.createElement("button");
+            button.setAttribute("onclick", "buttonClick(${i}, ${j})");
+            gameTable.appendChild(button);
+            button.innerText = (col*row);   //use this to set button letter
+
+        }
+    }
+
+}
+
+function buttonClick(row, col){
+
+    console.log("Botton ${row} ${col} pressed");
+    setColor();      //will set the button color when player colors are made
+
+}
+
+function setColor(){
+
+    console.log("color set to: ");
+
+}
+
 function joinLobby() {
+    
     let nickname = document.getElementById("nickname").value;
-    socket.send(JSON.stringify({ type: "joinLobby", nickname: nickname }));
+    document.getElementById("nickname").value = '';
+    document.getElementById("nicknameInput").style.display = "none";
+    document.getElementById("waitingPlayersList").style.display = "block";
+    //socket.send(JSON.stringify({ type: "joinLobby", nickname: nickname }));
 }
 
 function startGame() {
-    socket.send(JSON.stringify({ type: "startGame" }));
+
+    document.getElementById("waitingPlayersList").style.display = "none";
+    document.getElementById("gameTable").style.display = "grid";
+    makeTable();
+    //socket.send(JSON.stringify({ type: "startGame" }));
 }
 
 function displayWaitingPlayers(players) {
@@ -52,7 +94,6 @@ function displayWaitingPlayers(players) {
     document.getElementById("nicknameInput").style.display = "none";
     document.getElementById("waitingPlayersList").style.display = "block";
 }
-
 
 
     </script>

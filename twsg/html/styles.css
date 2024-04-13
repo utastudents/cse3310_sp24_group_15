@@ -1,0 +1,22 @@
+body {
+  background-color: LightSteelBlue;
+}
+
+.buttonTable{
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  grid-column-gap: 0.5px;
+  grid-row-gap: 0.5px;
+}
+
+.buttonTable button{
+  border: 1px outset black;
+  background-color: MintCream;
+  height: 30px;
+  cursor: pointer;
+}
+
+.buttonTable button:hover{
+  background-color: teal;
+  color:white;
+}
