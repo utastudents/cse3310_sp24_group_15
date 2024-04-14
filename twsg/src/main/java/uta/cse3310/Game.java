@@ -1,6 +1,12 @@
 package uta.cse3310;
-
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+import uta.cse3310.WordBank;
+import uta.cse3310.Grid;
 
 public class Game {
 
@@ -21,7 +27,7 @@ public class Game {
         Stats = s;
         Button = new PlayerType[2500];
         // initialize it
-        initializeBoard();
+        initializeGrid();
 
         Players = PlayerType.bluePLAYER;
         // Shown to the user, 0 is bluePLAYER
@@ -30,13 +36,147 @@ public class Game {
         Msg[0] = "Waiting for other player to join";
         Msg[1] = "";
     }
+    private  Set<String> uniqueWords = new HashSet<>();
+    private final int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1}; // Changes in row indices for 8 directions
+    private final int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1}; // Changes in column indices for 8 directions
+ //gh repo clone utastudents/cse3310_sp24_group_15
+    
+    private List<Word> wordsu = new ArrayList<>();
+        // Add words to the list if needed
 
-    public void initializeBoard() {
-        // initializes the board to NOPLAYER in all spots
-        // then sets the words in the grid
-        // then fills the rest with random letters
+    Grid gridg = new Grid(wordsu);
+    private char[][] grid = gridg.grid;
+    public char randomLetter() { // Method name should start with lowercase
+        String chars = ".";
+        Random rnd = new Random();
+        char c = chars.charAt(rnd.nextInt(chars.length()));
+        return Character.toUpperCase(c);
+    }
+    
+    // Initialize the grid with random letters
+    public void initializeGrid() {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                grid[i][j] = ' '; // Call the randomLetter method with parentheses
+            }
+        }
+    }
+    
+
+    // Populate the grid with words and random letters
+    public void populateGridWithWords() {
+        // Get random words from the WordBank
+        WordBank wordBank = new WordBank(); // Rename the variable to start with lowercase
+       
+        ArrayList<String> words = new ArrayList<>();
+        while (words.size() < 20) {
+            String word = wordBank.getRandomWord();
+                if (!uniqueWords.contains(word)) {
+                    words.add(word);
+                    uniqueWords.add(word);
+                }
+            }
+
+
+        // Place words in the grid
+        for (String word : words) {
+            placeWord(word);
+        }
+
+        // Fill empty slots with random letters
+        fillEmptySlotsWithRandomLetters();
     }
 
+    // Place a word in the grid
+    private void placeWord(String word) {
+        Random rand = new Random();
+        int row = rand.nextInt(grid.length);
+        int col = rand.nextInt(grid[0].length);
+        int direction = rand.nextInt(8); // 8 possible directions (horizontal, vertical, diagonal)
+    
+        // Check if the word can fit in the chosen direction
+        boolean canPlace = checkPlaceWord(word, row, col, direction);
+    
+        if (canPlace) {
+            // Place the word in the grid
+            int len = word.length();
+            for (int i = 0; i < len; i++) {
+                grid[row][col] = word.charAt(i);
+                row += dx[direction];//move to the next position based on the chosen direction
+                col += dy[direction];
+            }
+        } else {
+            placeWord(word); //retry placing the word
+        }
+    }
+    public Game() {
+        // Constructor code here
+        // You can initialize the Game object without any parameters
+    }
+    // Helper method to check if a word can be placed at a certain position and direction
+    private boolean checkPlaceWord(String word, int row, int col, int direction) {
+        int len = word.length();
+        int newRow = row + len * dx[direction];
+        int newCol = col + len * dy[direction];
+        if (newRow < 0 || newRow >= grid.length || newCol < 0 || newCol >= grid[0].length) {
+            return false; 
+        }
+        for (int i = 0; i < len; i++) {
+            if (grid[row][col] != ' ' && grid[row][col] != word.charAt(i)) {
+                return false; 
+            }
+            
+            row += dx[direction];
+            col += dy[direction];
+        }
+    
+        return true; 
+    }
+    
+    
+
+    // Fill empty slots with random letters
+    private void fillEmptySlotsWithRandomLetters() {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == ' ') { 
+                    grid[i][j] = randomLetter(); 
+                }
+            }
+        }
+        
+    }
+
+    public char[][] getGrid() {
+        return grid;
+    }
+    public void PrintGame(int on) {
+
+        if(on == 1){
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[i].length; j++) {
+                    System.out.print(grid[i][j] + " ");
+                }
+                System.out.println(); 
+            }
+            System.out.println("Used Words:");
+            for (String word : uniqueWords) {
+                System.out.println(word);
+            }
+        }
+    }
+    
+    /*  THIS IS HOW TO test
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.initializeGrid();
+        game.populateGridWithWords();
+        char[][] grid = game.getGrid();
+        
+        game.PrintGame(0); // //1 for print, 0 for none
+    }*/
+    
+    /*
     public void PrintGame() {
         // this method is used for debugging only
         // sometimes you want to see a picture of what is going on
@@ -44,7 +184,7 @@ public class Game {
         System.out.println(Button[0].toString() + " " + Button[1].toString() + " " + Button[2].toString());
         System.out.println(Button[3].toString() + " " + Button[4].toString() + " " + Button[5].toString());
         System.out.println(Button[6].toString() + " " + Button[7].toString() + " " + Button[8].toString());
-    }
+    }*/
 
     public void SetBoard(PlayerType p, int[] b) {
         // this method is only used for testing purposes
