@@ -47,10 +47,10 @@ public class Game {
     Grid gridg = new Grid(wordsu);
     public char[][] grid = gridg.grid;
     public char randomLetter() { // Method name should start with lowercase
-        String chars = ".";
+        String chars = "."; // test, use abcdefghijklmnopqrstuvwxyz
         Random rnd = new Random();
         char c = chars.charAt(rnd.nextInt(chars.length()));
-        return Character.toUpperCase(c);
+        return Character.toUpperCase(c);//upper is for test
     }
     
     // Initialize the grid with random letters
