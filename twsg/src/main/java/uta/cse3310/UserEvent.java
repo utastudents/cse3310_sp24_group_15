@@ -5,6 +5,7 @@ public class UserEvent {
     int GameId; // the game ID on the server
     PlayerType PlayerIdx; // either an bluePLAYER or redPLAYER
     int Button; // button number from 0 to 2499
+    char[][] grid;
 
     UserEvent() {
 

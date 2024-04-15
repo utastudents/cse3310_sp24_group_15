@@ -18,12 +18,33 @@
         <ul id="playersList"></ul>
         <button onclick="startGame()">Play with 2 Players</button>
     </div>
-    <div class="buttonTable" id="gameTable" style="display:none;">
+    <div class="container">
+        <div class="buttonTable" id="gameTable" style="display:none;">    
+        </div>
+        <div class="info">
+          <div class="playerInfo" id="playerInfo" style="display:none;">
+              <ul class="player1Info" id="player1Info"></ul>
+              <ul class="player2Info" id="player2Info"></ul>
+          </div>
+  
+          <div class="wordBank" id="wordBank" style="display:none;">
+              <h2 class="wordBank">Word Bank: </h2>
+              <ul class="word" onclick="scratchOut(this)" id="w1">word1</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w2">word2</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w3">word3</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w4">word4</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w5">word5</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w6">word6</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w7">word7</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w8">word8</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w9">word9</ul>
+              <ul class="word" onclick="scratchOut(this)" id="w10">word10</ul>
+          </div>
+        </div>
         
     </div>
-    
     <script >
-      let socket = new WebSocket("ws://" + location.host + ":9880");
+      let socket = new WebSocket("ws://" + location.host + ":9115");
 
 socket.onopen = function(event) {
     console.log("Connection established.");
@@ -34,35 +55,46 @@ socket.onmessage = function(event) {
     if (message.type === "waitingPlayers") {
         displayWaitingPlayers(message.players);
     }
+    
 };
+
+function scratchOut(word){
+  
+  word.classList.toggle('strikethrough');
+  
+}
 
 function makeTable(){
 
-    var gameTable = document.getElementById("gameTable");
+    const gameTable = document.getElementById("gameTable");
 
-    for(var row = 1; row < 21; row++){
-        for(var col = 1; col < 21; col++){
+    for(var row = 0; row < 20; row++){
 
-            var button = document.createElement("button");
-            button.setAttribute("onclick", "buttonClick(${i}, ${j})");
-            gameTable.appendChild(button);
-            button.innerText = (col*row);   //use this to set button letter
+        const tableRow = document.createElement("tr");
+
+        for(var col = 0; col < 20; col++){
+
+            const cell = document.createElement("td");
+            const button = document.createElement("button");
+
+            button.addEventListener("click", function() {
+                button.style.backgroundColor = "red";
+            });
+
+            cell.appendChild(button);  //use this to set button letter
+            tableRow.appendChild(cell);
 
         }
+
+        gameTable.appendChild(tableRow);
+
     }
 
 }
 
-function buttonClick(row, col){
+function buttonClick(){
 
     console.log("Botton ${row} ${col} pressed");
-    setColor();      //will set the button color when player colors are made
-
-}
-
-function setColor(){
-
-    console.log("color set to: ");
 
 }
 
@@ -79,6 +111,10 @@ function startGame() {
 
     document.getElementById("waitingPlayersList").style.display = "none";
     document.getElementById("gameTable").style.display = "grid";
+    document.getElementById("playerInfo").style.display = "block";
+    document.getElementById("wordBank").style.display = "block";
+    document.getElementById("player1Info").textContent = "Player1: SCORE";
+    document.getElementById("player2Info").textContent = "Player2: SCORE";
     makeTable();
     //socket.send(JSON.stringify({ type: "startGame" }));
 }

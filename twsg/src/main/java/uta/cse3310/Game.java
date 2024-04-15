@@ -45,7 +45,7 @@ public class Game {
         // Add words to the list if needed
 
     Grid gridg = new Grid(wordsu);
-    private char[][] grid = gridg.grid;
+    public char[][] grid = gridg.grid;
     public char randomLetter() { // Method name should start with lowercase
         String chars = ".";
         Random rnd = new Random();

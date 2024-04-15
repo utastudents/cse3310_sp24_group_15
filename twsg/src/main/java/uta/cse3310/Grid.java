@@ -3,7 +3,7 @@ package uta.cse3310;
 import java.util.ArrayList;
 import java.util.List;
 
-class Grid {
+public class Grid {
 
     char[][] grid = new char[20][20];
     private List<Word> embeddedWords;
