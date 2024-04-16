@@ -52,7 +52,9 @@ td{
 .strikethrough{
   text-decoration: line-through;
 }
-#timer{
+
+.timer{
+  margin-left: 20px;
   font-size: 250%;
   left: 10%;
   top: 3%;

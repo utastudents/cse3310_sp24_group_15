@@ -109,7 +109,7 @@ socket.onmessage = function(event) {
     }
 };
 // Set the timer for 5 minutes (in seconds)
-const timerDuration = 5 * 60;
+const timerDuration = 1 * 60;
 
 
 // Get the timer element
@@ -129,9 +129,9 @@ function startTimer(duration, display) {
 
 
         display.textContent = minutes + ":" + seconds;
-        if (timer === Math.floor(duration / 2)) {
-                // Trigger something halfway through the timer
-                
+        if (timer === 0) {
+                // Will trigger HINT function from java and reset timer back to 1min
+                let timer = duration, minutes, seconds;
                 // You can replace the console.log statement with your custom action
             }
 
