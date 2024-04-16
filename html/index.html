@@ -115,6 +115,83 @@ const timerDuration = 1 * 60;
 // Get the timer element
 const timerDisplay = document.getElementById('timer');
 
+function generateRandomWordFromWordBank() {
+    const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
+    const randomIndex = Math.floor(Math.random() * wordBank.length); // Get a random index
+    const randomWordElement = wordBank[randomIndex]; // Select the random word element
+    const randomWord = randomWordElement.textContent.trim(); // Get the text content of the selected element
+    return randomWord;
+}
+let previousLetterIndex = null;
+
+// Function to highlight a letter in the game table
+
+
+function dehighlightAllLettersInGameTable() {
+    const gameTable = document.getElementById("gameTable");
+
+    // Check if gameTable exists
+    if (gameTable) {
+        const cells = gameTable.querySelectorAll("td");
+
+        // Iterate over each cell in the game table
+        for (let i = 0; i < cells.length; i++) {
+            // Get the button element in the current cell
+            const button = cells[i].querySelector("button");
+            
+            // Clear the color of the button
+            if (button) {
+                button.style.color = ""; // Clear the color
+            }
+        }
+    }
+}
+
+
+// Function to repeat the process of highlighting a letter after the timer
+function highlight() {
+    const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
+    const randomIndex = Math.floor(Math.random() * wordBank.length); // Get a random index
+    const randomWordElement = wordBank[randomIndex]; // Select the random word element
+    const randomWord = randomWordElement.textContent.trim(); // Get the text content of the selected element
+
+    // Iterate over each letter in the random word and highlight it
+    
+        const letter = randomWord[0].toUpperCase(); // Convert letter to uppercase
+        searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
+    
+
+     
+}
+
+// Function to search and highlight a letter in the game table
+function searchLetterInGameTableAndHighlight(letter) {
+    const gameTable = document.getElementById("gameTable");
+    dehighlightAllLettersInGameTable();
+    // Check if gameTable exists
+    if (gameTable) {
+        const cells = gameTable.querySelectorAll("td");
+
+        // Iterate over each cell in the game table
+        for (let i = 0; i < cells.length; i++) {
+            // Get the button element in the current cell
+            const button = cells[i].querySelector("button");
+            // Get the text content of the button
+            const buttonText = button ? button.textContent.trim().toUpperCase() : ''; // Check if button exists
+
+            // Check if the button text matches the provided letter
+            if (buttonText === letter) {
+                // Highlight the button by changing its color to yellow
+                if (button) {
+                    button.style.color = "green";
+                }
+            }
+        }
+    }
+}
+
+// Example usage:
+
 
 // Function to start the countdown
 function startTimer(duration, display) {
@@ -132,6 +209,7 @@ function startTimer(duration, display) {
         if (timer === 0) {
                 // Will trigger HINT function from java and reset timer back to 1min
                 let timer = duration, minutes, seconds;
+                highlight();
                 // You can replace the console.log statement with your custom action
             }
 
@@ -179,19 +257,7 @@ function makeTable(gridArray) {
     }
 }
 
-function highlightLetter(gridArray, letterToHighlight) {
-    const gameTable = document.getElementById("gameTable");
 
-    for (var row = 0; row < gridArray.length; row++) {
-        for (var col = 0; col < gridArray[row].length; col++) {
-            if (gridArray[row][col] === letterToHighlight) {
-                // Get the button corresponding to this cell
-                const button = gameTable.rows[row].cells[col].querySelector("button");
-                button.style.backgroundColor = "red";
-            }
-        }
-    }
-}
 
 function buttonClick(){
 
@@ -216,7 +282,7 @@ function startGame() {
     document.getElementById("wordBank").style.display = "block";
     document.getElementById("player1Info").textContent = "Player1: SCORE";
     document.getElementById("player2Info").textContent = "Player2: SCORE";
-    makeTable();
+   
     //socket.send(JSON.stringify({ type: "startGame" }));
 }
 
