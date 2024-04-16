@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Grid {
 
-    char[][] grid = new char[20][20];
+    public char[][] grid = new char[20][20];
     private List<Word> embeddedWords;
 
     // Constructor

@@ -36,7 +36,7 @@ public class Game {
         Msg[0] = "Waiting for other player to join";
         Msg[1] = "";
     }
-    private  Set<String> uniqueWords = new HashSet<>();
+    public  Set<String> uniqueWords = new HashSet<>();
     private final int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1}; // Changes in row indices for 8 directions
     private final int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1}; // Changes in column indices for 8 directions
  //gh repo clone utastudents/cse3310_sp24_group_15
@@ -47,7 +47,7 @@ public class Game {
     Grid gridg = new Grid(wordsu);
     public char[][] grid = gridg.grid;
     public char randomLetter() { // Method name should start with lowercase
-        String chars = "."; // test, use abcdefghijklmnopqrstuvwxyz
+        String chars = "abcdefghijklmnopqrstuvwxyz"; // test, use abcdefghijklmnopqrstuvwxyz
         Random rnd = new Random();
         char c = chars.charAt(rnd.nextInt(chars.length()));
         return Character.toUpperCase(c);//upper is for test
