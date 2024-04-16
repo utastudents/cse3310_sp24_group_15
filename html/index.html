@@ -26,7 +26,7 @@
               <ul class="player1Info" id="player1Info"></ul>
               <ul class="player2Info" id="player2Info"></ul>
           </div>
-  
+          <div id="timer"></div>
           <div class="wordBank" id="wordBank" style="display:none;">
               <h2 class="wordBank">Word Bank: </h2>
               <ul class="word" onclick="scratchOut(this)" id="w1">word1</ul>
@@ -80,6 +80,15 @@ socket.onmessage = function(event) {
     const wordBankList = wordBank.querySelector(".wordBank");
     wordBankList.innerHTML = "Word Bank: ";
 
+    // Get a random index within the range of receivedWordlist
+    const randomIndex = Math.floor(Math.random() * receivedWordlist.length);
+    const randomWord = receivedWordlist[randomIndex];
+
+    // Extract the first letter of the random word
+    const firstLetter = randomWord.charAt(0).toUpperCase(); // Assuming you want the first letter in uppercase
+    
+    // Now you can use the 'firstLetter' variable for further processing
+
     // Iterate over the received word list and update the list items
     receivedWordlist.forEach((word, index) => {
         const listItem = wordBank.querySelector(`#w${index + 1}`);
@@ -89,8 +98,8 @@ socket.onmessage = function(event) {
     });
 
     wordBank.style.display = "none";
-
 }
+
  
     if (message.type === "waitingPlayers") {
         // Handle waiting players data
@@ -99,6 +108,43 @@ socket.onmessage = function(event) {
         displayWaitingPlayers(players);
     }
 };
+// Set the timer for 5 minutes (in seconds)
+const timerDuration = 5 * 60;
+
+
+// Get the timer element
+const timerDisplay = document.getElementById('timer');
+
+
+// Function to start the countdown
+function startTimer(duration, display) {
+    let timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+
+        display.textContent = minutes + ":" + seconds;
+        if (timer === Math.floor(duration / 2)) {
+                // Trigger something halfway through the timer
+                
+                // You can replace the console.log statement with your custom action
+            }
+
+
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);
+}
+
+
+
 
 
 
@@ -133,6 +179,19 @@ function makeTable(gridArray) {
     }
 }
 
+function highlightLetter(gridArray, letterToHighlight) {
+    const gameTable = document.getElementById("gameTable");
+
+    for (var row = 0; row < gridArray.length; row++) {
+        for (var col = 0; col < gridArray[row].length; col++) {
+            if (gridArray[row][col] === letterToHighlight) {
+                // Get the button corresponding to this cell
+                const button = gameTable.rows[row].cells[col].querySelector("button");
+                button.style.backgroundColor = "red";
+            }
+        }
+    }
+}
 
 function buttonClick(){
 
@@ -150,7 +209,7 @@ function joinLobby() {
 }
 
 function startGame() {
-
+    startTimer(timerDuration, timerDisplay);
     document.getElementById("waitingPlayersList").style.display = "none";
     document.getElementById("gameTable").style.display = "grid";
     document.getElementById("playerInfo").style.display = "block";
