@@ -45,7 +45,7 @@
     </div>
     <script >
       var serverUrl;
-    serverUrl = "ws://" + window.location.hostname + ":9880";
+    serverUrl = "ws://" + window.location.hostname + ":9115";
     // Create the connection with the server
     socket = new WebSocket(serverUrl);
 
@@ -87,6 +87,9 @@ socket.onmessage = function(event) {
             listItem.textContent = word;
         }
     });
+
+    wordBank.style.display = "none";
+
 }
  
     if (message.type === "waitingPlayers") {
