@@ -44,7 +44,10 @@
         
     </div>
     <script >
-      let socket = new WebSocket("ws://" + location.host + ":9115");
+      var serverUrl;
+    serverUrl = "ws://" + window.location.hostname + ":9880";
+    // Create the connection with the server
+    socket = new WebSocket(serverUrl);
 
 socket.onopen = function(event) {
     console.log("Connection established.");
@@ -52,11 +55,49 @@ socket.onopen = function(event) {
 
 socket.onmessage = function(event) {
     let message = JSON.parse(event.data);
-    if (message.type === "waitingPlayers") {
-        displayWaitingPlayers(message.players);
-    }
     
+    // Check the type of message
+    if (message.type === "grid") {
+    // Handle array data
+    let receivedGridArray = message.data;
+    console.log("array received");
+    
+    // Call makeTable() with the received array
+    makeTable(receivedGridArray);
+    }   
+    if (message.type === "WordList") {
+    // Handle array data
+    let receivedWordlist = message.data;
+    console.log("WordList received");
+    
+    // Get the word bank element
+    const wordBank = document.getElementById("wordBank");
+
+    // Display the word bank element
+    wordBank.style.display = "block";
+
+    // Update the word bank content with received word list
+    const wordBankList = wordBank.querySelector(".wordBank");
+    wordBankList.innerHTML = "Word Bank: ";
+
+    // Iterate over the received word list and update the list items
+    receivedWordlist.forEach((word, index) => {
+        const listItem = wordBank.querySelector(`#w${index + 1}`);
+        if (listItem) {
+            listItem.textContent = word;
+        }
+    });
+}
+ 
+    if (message.type === "waitingPlayers") {
+        // Handle waiting players data
+        console.log("names");
+        let players = message.data;
+        displayWaitingPlayers(players);
+    }
 };
+
+
 
 function scratchOut(word){
   
@@ -64,33 +105,31 @@ function scratchOut(word){
   
 }
 
-function makeTable(){
-
+function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
 
-    for(var row = 0; row < 20; row++){
-
+    for (var row = 0; row < gridArray.length; row++) {
         const tableRow = document.createElement("tr");
 
-        for(var col = 0; col < 20; col++){
-
+        for (var col = 0; col < gridArray[row].length; col++) {
             const cell = document.createElement("td");
             const button = document.createElement("button");
+
+            // Set the text of the button to the value from the gridArray
+            button.textContent = gridArray[row][col];
 
             button.addEventListener("click", function() {
                 button.style.backgroundColor = "red";
             });
 
-            cell.appendChild(button);  //use this to set button letter
+            cell.appendChild(button);
             tableRow.appendChild(cell);
-
         }
 
         gameTable.appendChild(tableRow);
-
     }
-
 }
+
 
 function buttonClick(){
 
@@ -120,16 +159,41 @@ function startGame() {
 }
 
 function displayWaitingPlayers(players) {
-    let playersList = document.getElementById("playersList");
-    playersList.innerHTML = "";
-    players.forEach(player => {
-        let listItem = document.createElement("li");
-        listItem.textContent = player;
-        playersList.appendChild(listItem);
-    });
-    document.getElementById("nicknameInput").style.display = "none";
-    document.getElementById("waitingPlayersList").style.display = "block";
+    try {
+        // Check if players is an array
+        if (!Array.isArray(players)) {
+            throw new TypeError("Players must be an array.");
+        }
+
+        // Get the players list element
+        let playersList = document.getElementById("playersList");
+        
+        // Clear the existing player list
+        playersList.innerHTML = "";
+
+        // Iterate over each player in the array
+        players.forEach(player => {
+            // Create a list item for the player
+            let listItem = document.createElement("li");
+            
+            // Set the text content of the list item to the player's name
+            listItem.textContent = player;
+            
+            // Append the list item to the players list
+            playersList.appendChild(listItem);
+        });
+        
+        // Hide the nickname input field
+        document.getElementById("nicknameInput").style.display = "none";
+        
+        // Display the waiting players list
+        document.getElementById("waitingPlayersList").style.display = "block";
+    } catch (error) {
+        // Handle any errors that may occur
+        console.error("An error occurred while displaying waiting players:", error);
+    }
 }
+
 
 
     </script>
