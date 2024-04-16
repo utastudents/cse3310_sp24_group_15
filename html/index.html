@@ -26,7 +26,11 @@
               <ul class="player1Info" id="player1Info"></ul>
               <ul class="player2Info" id="player2Info"></ul>
           </div>
-          <div id="timer"></div>
+          <div class="hintTimer" id="hintTimer" style="display:none;">
+            <ul>Time until Hint: </ul>
+          </div>
+          <div class="timer" id="timer">
+          </div>
           <div class="wordBank" id="wordBank" style="display:none;">
               <h2 class="wordBank">Word Bank: </h2>
               <ul class="word" onclick="scratchOut(this)" id="w1">word1</ul>
@@ -140,8 +144,10 @@ function dehighlightAllLettersInGameTable() {
             const button = cells[i].querySelector("button");
             
             // Clear the color of the button
-            if (button) {
-                button.style.color = ""; // Clear the color
+            if (button && button.style.backgroundColor == "yellow") {
+
+                button.style.backgroundColor = "#f5fffa"; // Clear the color
+                
             }
         }
     }
@@ -183,7 +189,7 @@ function searchLetterInGameTableAndHighlight(letter) {
             if (buttonText === letter) {
                 // Highlight the button by changing its color to yellow
                 if (button) {
-                    button.style.color = "green";
+                    button.style.backgroundColor = "yellow";
                 }
             }
         }
@@ -280,6 +286,7 @@ function startGame() {
     document.getElementById("gameTable").style.display = "grid";
     document.getElementById("playerInfo").style.display = "block";
     document.getElementById("wordBank").style.display = "block";
+    document.getElementById("hintTimer").style.display = "block";
     document.getElementById("player1Info").textContent = "Player1: SCORE";
     document.getElementById("player2Info").textContent = "Player2: SCORE";
    

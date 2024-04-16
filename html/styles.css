@@ -3,7 +3,6 @@ body {
 }
 
 .container{
-  margin-botton: 10px;
   display: flex;
 }
 
@@ -33,16 +32,16 @@ td{
 
 .player1Info{
   color: blue;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .player2Info{
   color: red;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .wordBank{
-  margin-left: 20px;  
+  margin-left: 10px;  
 }
 
 .word{
@@ -54,7 +53,7 @@ td{
 }
 
 .timer{
-  margin-left: 20px;
+  margin-left: 50px;
   font-size: 250%;
   left: 10%;
   top: 3%;
