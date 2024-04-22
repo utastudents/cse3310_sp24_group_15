@@ -281,13 +281,13 @@ public class Game {
         //check if word valid if passes test above (valid move check)
         //if word is valid do the apporopriate functions
         //if there are no words in the word list calculate winner
-        if (U.isValidWord()) {
-            if (U.getPlayerId().equals("Player1")) {
-                scorePlayer1 += U.getWord().length();
-            } else if (U.getPlayerId().equals("Player2")) {
-                scorePlayer2 += U.getWord().length();
-            }
-        }
+        //if (U.isValidWord()) {
+          //  if (U.getPlayerId().equals("Player1")) {
+              //  scorePlayer1 += U.getWord().length();
+          //  } else if (U.getPlayerId().equals("Player2")) {
+            //    scorePlayer2 += U.getWord().length();
+           // }
+       // }
 
     }
 
