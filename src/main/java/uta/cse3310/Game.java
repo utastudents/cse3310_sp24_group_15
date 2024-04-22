@@ -24,8 +24,14 @@ public class Game {
     public String[] Msg;
     public int GameId;
     public Statistics Stats;
+    private int scorePlayer1;
+    private int scorePlayer2;
+
 
     Game(Statistics s) {
+        scorePlayer1 = 0;
+        scorePlayer2 = 0;
+
         Stats = s;
         Button = new PlayerType[2500];
         // initialize it
@@ -116,6 +122,7 @@ public class Game {
         // You can initialize the Game object without any parameters
         rPlayers = new HashSet<>();
         wPlayers = new ArrayList<>();
+
     }
     // Helper method to check if a word can be placed at a certain position and direction
     private boolean checkPlaceWord(String word, int row, int col, int direction) {
@@ -277,6 +284,21 @@ public class Game {
         //if word is valid do the apporopriate functions
         //if there are no words in the word list calculate winner
 
+        if (U.isValidWord()) {
+            if (U.getPlayerId().equals("Player1")) {
+                scorePlayer1 += U.getWord().length();
+            } else if (U.getPlayerId().equals("Player2")) {
+                scorePlayer2 += U.getWord().length();
+            }
+        }
+    }
+
+    public int getScorePlayer1() {
+        return scorePlayer1;
+    }
+
+    public int getScorePlayer2() {
+        return scorePlayer2;
     }
 
     public void Tick() {
@@ -287,18 +309,18 @@ public class Game {
      // Method to register a new player with a nickname
     // NF: boolean, UREQ018
     public boolean registerPlayer(String nickname) {
+
       //if the existing user namer contain nickname 
       //print that the name is already been taken and return false
       //if the name is not yet being picked then we add the name nickname and return the true
-
-      if (rPlayers.contains(nickname)) {
-        System.out.println("Error: " + nickname + " is taken. Try something else!");
-        return false;
-      } else {
-        rPlayers.add(nickname);
-        System.out.println("Successful registration for " + nickname);
-        return true;
-      }
+        if (rPlayers.contains(nickname)) {
+            System.out.println("Error: " + nickname + " is taken. Try something else!");
+            return false;
+        } else {
+            rPlayers.add(nickname);
+            System.out.println("Successful registration for " + nickname);
+            return true;
+        }
     }
       // Method to sign in a player with a nickname
     // F: boolean, UREQ021
@@ -316,9 +338,22 @@ public class Game {
         rPlayers.add(nickname);
             System.out.println("Error: Player " + nickname + " not found.");
             return false;
-        }
-    
+        }   
     }
+
+    // Check play username on login attempt
+    
+
+    // Clear usernames from storage and exit
+    public void usernameClear() {
+        rPlayers.clear();
+        wPlayers.clear();
+    }
+
+    public void exitGame() {
+        usernameClear();
+    }
+
 
      public void startWordSelection(int row, int col, String playerId) {
         // Logic to start selecting a word
