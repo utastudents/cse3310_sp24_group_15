@@ -262,7 +262,7 @@ public class Game {
         // Check if there is two player in the waiting list 
         // if there two player in the waiting list is set the game to start
         if (wPlayers.size() >= 2) {
-            startGame();
+            // startGame();
         } else {
             System.out.println("Not enough players.. Please wait..");
         }
