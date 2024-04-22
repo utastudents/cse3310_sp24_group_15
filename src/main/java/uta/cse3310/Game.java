@@ -22,6 +22,9 @@ public class Game {
     public String[] Msg;
     public int GameId;
     public Statistics Stats;
+   
+
+
 
     Game(Statistics s) {
         Stats = s;
@@ -204,34 +207,41 @@ public class Game {
     }
 
     private boolean CheckLine(int[] a, int[] b) {
-        // Uses the checks to see if the word is from the word list
-        // Takes in the two button arrays the player selects
-        // CheckHorizontal();
-        // CheckDiagonal();
-        // CheckVertical();
-        // will return boolean from the check
-        // If the two button arrays do not meet the horizontal
-        // diagonal or vertical check it will return false
-        return true;
+  
+    if (CheckHorizontal(a, b) || CheckVertical(a, b) || CheckDiagonal(a, b)) {
+        return true; 
+    } else {
+        return false; 
+    }
     }
 
     private boolean CheckHorizontal(int[] a, int[] b) {
-        //checks horizontal word with word bank
-        //returns boolean
-        return true;
+       StringBuilder word= new StringBuilder();
+       for(int i = 0; i< a.length; i++){
+        word.append(grid[a[i]/50 ][a[i]%50]);
+       }
+       return uniqueWords.contain(word.toString().toUpperCase());
     }
 
     private boolean CheckVertical(int[] a, int[] b) {
-        //checks vertical word with word bank
-        //returns boolean
-        return true;
+          StringBuilder word = new StringBuilder();
+       for(int i = 0; i< a.length; i++){
+        word.append(grid[a[i]/50 ][a[i]%50]);
+       }
+       return uniqueWords.contain(word.toString().toUpperCase());
     }
 
     private boolean CheckDiagonal(int[] a, int[] b) {
-        //checks diagonal word with word bank
-        //returns boolean
-        return true;
+        StringBuilder word1 = new StringBuilder();
+        StringBuilder word2 = new StringBuilder();
+        int n = a.length;
+        for (int i = 0; i < n; i++) {
+            word1.append(grid[a[i] / 50][a[i] % 50]);
+            word2.append(grid[b[i] / 50][b[i] % 50]);
+        }
+        return arrayContains(uniqueWordsArray, word1.toString().toUpperCase()) || arrayContains(uniqueWordsArray, word2.toString().toUpperCase());
     }
+
 
 
     // This function returns an index for each player
