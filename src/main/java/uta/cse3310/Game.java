@@ -11,8 +11,8 @@ import uta.cse3310.Grid;
 public class Game {
 
     PlayerType Players;
-    private Set<String> registeredPlayers;
-    private List<String> waitingPlayers;
+    private Set<String> rPlayers;
+    private List<String> wPlayers;
     public PlayerType[] Button;
     // Buttons are indexed 0 to 2499 in the code
     // 0    1   2   .. 49
@@ -114,8 +114,8 @@ public class Game {
     public Game() {
         // Constructor code here
         // You can initialize the Game object without any parameters
-        registeredPlayers = new HashSet<>();
-        waitingPlayers = new ArrayList<>();
+        rPlayers = new HashSet<>();
+        wPlayers = new ArrayList<>();
     }
     // Helper method to check if a word can be placed at a certain position and direction
     private boolean checkPlaceWord(String word, int row, int col, int direction) {
@@ -254,7 +254,7 @@ public class Game {
     // F: void, UREQ023
     public void addWaitingPlayer(String playerNickname) {
         //add the player on the waiting list
-        waitingPlayers.add(playerNickname);
+        wPlayers.add(playerNickname);
     }
      // Method to start the game when there are two waiting players
     // F: void, UREQ026
@@ -291,11 +291,11 @@ public class Game {
       //print that the name is already been taken and return false
       //if the name is not yet being picked then we add the name nickname and return the true
 
-      if (registeredPlayers.contains(nickname)) {
+      if (rPlayers.contains(nickname)) {
         System.out.println("Error: " + nickname + " is taken. Try something else!");
         return false;
       } else {
-        registeredPlayers.add(nickname);
+        rPlayers.add(nickname);
         System.out.println("Successful registration for " + nickname);
         return true;
       }
@@ -309,11 +309,11 @@ public class Game {
         // Successful login or in another way return true
         //else print not found and return false
 
-        if (registeredPlayers.contains(nickname)) {
+        if (rPlayers.contains(nickname)) {
             System.out.println("Success: Player " + nickname + " signed in!");
             return true;
         } else {
-        registeredPlayers.add(nickname);
+        rPlayers.add(nickname);
             System.out.println("Error: Player " + nickname + " not found.");
             return false;
         }
