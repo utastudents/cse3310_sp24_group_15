@@ -200,7 +200,7 @@ public class Game {
 
     }
 
-    public void startGame() {
+    public void StartGame() {
         // will start the game and give players their color for the game
         Msg[0] = "You are color [player1_color].";
         Msg[1] = "You are color [player2_color].";
@@ -262,7 +262,7 @@ public class Game {
         // Check if there is two player in the waiting list 
         // if there two player in the waiting list is set the game to start
         if (wPlayers.size() >= 2) {
-            startGame();
+            // startGame();
         } else {
             System.out.println("Not enough players.. Please wait..");
         }
