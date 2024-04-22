@@ -11,6 +11,8 @@ import uta.cse3310.Grid;
 public class Game {
 
     PlayerType Players;
+    private Set<String> registeredPlayers;
+    private List<String> waitingPlayers;
     public PlayerType[] Button;
     // Buttons are indexed 0 to 2499 in the code
     // 0    1   2   .. 49
@@ -112,6 +114,8 @@ public class Game {
     public Game() {
         // Constructor code here
         // You can initialize the Game object without any parameters
+        registeredPlayers = new HashSet<>();
+        waitingPlayers = new ArrayList<>();
     }
     // Helper method to check if a word can be placed at a certain position and direction
     private boolean checkPlaceWord(String word, int row, int col, int direction) {
@@ -250,14 +254,20 @@ public class Game {
     // F: void, UREQ023
     public void addWaitingPlayer(String playerNickname) {
         //add the player on the waiting list
+        waitingPlayers.add(playerNickname);
     }
      // Method to start the game when there are two waiting players
     // F: void, UREQ026
     public void twoPlayerStartGame() {
-     //check if there is two player in the waiting list 
-     // if there two player in the waiting list is set the game to start
-    }
+        // Check if there is two player in the waiting list 
+        // if there two player in the waiting list is set the game to start
+        if (wPlayers.size() >= 2) {
+            startGame();
+        } else {
+            System.out.println("Not enough players.. Please wait..");
+        }
 
+    }
 
 
     public void Update(UserEvent U) {
@@ -277,27 +287,39 @@ public class Game {
      // Method to register a new player with a nickname
     // NF: boolean, UREQ018
     public boolean registerPlayer(String nickname) {
-
-
       //if the existing user namer contain nickname 
       //print that the name is already been taken and return false
-      //if the name is not yet being picked then we add the name nickname and return the true 
+      //if the name is not yet being picked then we add the name nickname and return the true
 
-      return true;
-       
+      if (registeredPlayers.contains(nickname)) {
+        System.out.println("Error: " + nickname + " is taken. Try something else!");
+        return false;
+      } else {
+        registeredPlayers.add(nickname);
+        System.out.println("Successful registration for " + nickname);
+        return true;
+      }
     }
       // Method to sign in a player with a nickname
     // F: boolean, UREQ021
     public boolean signInPlayer(String nickname) {
          
-         //if the exist username contain the nickname
-         // Add the player to the waiting list upon successful sign-in
-         // Successful login or in another way return true
-         //else print not found and return false
+        //if the exist username contain the nickname
+        // Add the player to the waiting list upon successful sign-in
+        // Successful login or in another way return true
+        //else print not found and return false
 
-         return true;
+        if (registeredPlayers.contains(nickname)) {
+            System.out.println("Success: Player " + nickname + " signed in!");
+            return true;
+        } else {
+        registeredPlayers.add(nickname);
+            System.out.println("Error: Player " + nickname + " not found.");
+            return false;
+        }
     
     }
+
      public void startWordSelection(int row, int col, String playerId) {
         // Logic to start selecting a word
     }
