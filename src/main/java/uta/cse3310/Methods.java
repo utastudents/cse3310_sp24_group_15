@@ -10,16 +10,7 @@ import java.util.List;
 */
 public class Methods{
 
-    // Method to display the letter grid to both players
-    public void displayLetterGrid(char[][] grid) {
-        // Implementation to display the grid
-    }
-
-    // Method to provide a word list to each user
-    public List<String> generateWordList() {
-        // Implementation to generate and return a word list
-        return null;
-    }
+   
 
     // Method to update the score when a player locates a word
     public int updateScore(int currentScore) {
@@ -38,17 +29,7 @@ public class Methods{
         return false;
     }
 
-    // Method to register a new user
-    public boolean registerUser(String nickname) {
-        // Implementation to register a user and return success status
-        return false;
-    }
-
-    // Method to sign in a user
-    public boolean signInUser(String nickname) {
-        // Implementation to sign in a user and return success status
-        return false;
-    }
+   
 
     // Method to add a user to the Player Waiting List
     public void addUserToWaitingList(String nickname) {
@@ -65,11 +46,7 @@ public class Methods{
         // Implementation to display the winner
     }
 
-    // Method to provide a hint by showing the start letter of a random word
-    public char provideHint(List<String> wordList) {
-        // Implementation to provide a hint
-        return ' ';
-    }
+
 
     // Method to allow players to play again or return to the lobby
     public void postGameOptions(boolean playAgain) {
