@@ -11,8 +11,6 @@ import uta.cse3310.Grid;
 public class Game {
 
     PlayerType Players;
-    private Set<String> rPlayers;
-    private List<String> wPlayers;
     public PlayerType[] Button;
     // Buttons are indexed 0 to 2499 in the code
     // 0    1   2   .. 49
@@ -24,9 +22,6 @@ public class Game {
     public String[] Msg;
     public int GameId;
     public Statistics Stats;
-   
-
-
 
     Game(Statistics s) {
         Stats = s;
@@ -117,8 +112,6 @@ public class Game {
     public Game() {
         // Constructor code here
         // You can initialize the Game object without any parameters
-        rPlayers = new HashSet<>();
-        wPlayers = new ArrayList<>();
     }
     // Helper method to check if a word can be placed at a certain position and direction
     private boolean checkPlaceWord(String word, int row, int col, int direction) {
@@ -211,41 +204,34 @@ public class Game {
     }
 
     private boolean CheckLine(int[] a, int[] b) {
-  
-    if (CheckHorizontal(a, b) || CheckVertical(a, b) || CheckDiagonal(a, b)) {
-        return true; 
-    } else {
-        return false; 
-    }
+        // Uses the checks to see if the word is from the word list
+        // Takes in the two button arrays the player selects
+        // CheckHorizontal();
+        // CheckDiagonal();
+        // CheckVertical();
+        // will return boolean from the check
+        // If the two button arrays do not meet the horizontal
+        // diagonal or vertical check it will return false
+        return true;
     }
 
     private boolean CheckHorizontal(int[] a, int[] b) {
-       StringBuilder word= new StringBuilder();
-       for(int i = 0; i< a.length; i++){
-        word.append(grid[a[i]/50 ][a[i]%50]);
-       }
-       return uniqueWords.contain(word.toString().toUpperCase());
+        //checks horizontal word with word bank
+        //returns boolean
+        return true;
     }
 
     private boolean CheckVertical(int[] a, int[] b) {
-          StringBuilder word = new StringBuilder();
-       for(int i = 0; i< a.length; i++){
-        word.append(grid[a[i]/50 ][a[i]%50]);
-       }
-       return uniqueWords.contain(word.toString().toUpperCase());
+        //checks vertical word with word bank
+        //returns boolean
+        return true;
     }
 
     private boolean CheckDiagonal(int[] a, int[] b) {
-        StringBuilder word1 = new StringBuilder();
-        StringBuilder word2 = new StringBuilder();
-        int n = a.length;
-        for (int i = 0; i < n; i++) {
-            word1.append(grid[a[i] / 50][a[i] % 50]);
-            word2.append(grid[b[i] / 50][b[i] % 50]);
-        }
-        return arrayContains(uniqueWordsArray, word1.toString().toUpperCase()) || arrayContains(uniqueWordsArray, word2.toString().toUpperCase());
+        //checks diagonal word with word bank
+        //returns boolean
+        return true;
     }
-
 
 
     // This function returns an index for each player
@@ -264,20 +250,14 @@ public class Game {
     // F: void, UREQ023
     public void addWaitingPlayer(String playerNickname) {
         //add the player on the waiting list
-        wPlayers.add(playerNickname);
     }
      // Method to start the game when there are two waiting players
     // F: void, UREQ026
     public void twoPlayerStartGame() {
-        // Check if there is two player in the waiting list 
-        // if there two player in the waiting list is set the game to start
-        if (wPlayers.size() >= 2) {
-            // startGame();
-        } else {
-            System.out.println("Not enough players.. Please wait..");
-        }
-
+     //check if there is two player in the waiting list 
+     // if there two player in the waiting list is set the game to start
     }
+
 
 
     public void Update(UserEvent U) {
@@ -297,39 +277,27 @@ public class Game {
      // Method to register a new player with a nickname
     // NF: boolean, UREQ018
     public boolean registerPlayer(String nickname) {
+
+
       //if the existing user namer contain nickname 
       //print that the name is already been taken and return false
-      //if the name is not yet being picked then we add the name nickname and return the true
+      //if the name is not yet being picked then we add the name nickname and return the true 
 
-      if (rPlayers.contains(nickname)) {
-        System.out.println("Error: " + nickname + " is taken. Try something else!");
-        return false;
-      } else {
-        rPlayers.add(nickname);
-        System.out.println("Successful registration for " + nickname);
-        return true;
-      }
+      return true;
+       
     }
       // Method to sign in a player with a nickname
     // F: boolean, UREQ021
     public boolean signInPlayer(String nickname) {
          
-        //if the exist username contain the nickname
-        // Add the player to the waiting list upon successful sign-in
-        // Successful login or in another way return true
-        //else print not found and return false
+         //if the exist username contain the nickname
+         // Add the player to the waiting list upon successful sign-in
+         // Successful login or in another way return true
+         //else print not found and return false
 
-        if (rPlayers.contains(nickname)) {
-            System.out.println("Success: Player " + nickname + " signed in!");
-            return true;
-        } else {
-        rPlayers.add(nickname);
-            System.out.println("Error: Player " + nickname + " not found.");
-            return false;
-        }
+         return true;
     
     }
-
      public void startWordSelection(int row, int col, String playerId) {
         // Logic to start selecting a word
     }
