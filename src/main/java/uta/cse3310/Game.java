@@ -349,7 +349,7 @@ public class Game {
         usernameClear();
     }
 
-     public void startWordSelection(int row, int col, String playerId) {
+    public void startWordSelection(int row, int col, String playerId) {
         // Logic to start selecting a word
     }
     
@@ -362,11 +362,13 @@ public class Game {
     }
      public void promptStartLetter() {
         // Logic to prompt players of the start letter
+        System.out.println("Select the starting letter of your word!");
     }
        // Method to print the winner of the game
     // F: void
     public void printWinner(String winner) {
-       //implement the one that win 
+       //implement the one that win
+       System.out.println("The winner is " + winner);
     }
 
         // Method to provide a word list to each user
