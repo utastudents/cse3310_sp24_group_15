@@ -258,12 +258,18 @@ public class Game {
     // F: void, UREQ023
     public void addWaitingPlayer(String playerNickname) {
         //add the player on the waiting list
+        wPlayers.add(playerNickname);
     }
      // Method to start the game when there are two waiting players
     // F: void, UREQ026
     public void twoPlayerStartGame() {
      //check if there is two player in the waiting list 
      // if there two player in the waiting list is set the game to start
+        if (wPlayers.size() >= 2) {
+            // startGame();
+        } else {
+            System.out.println("Not enough players.. Please wait..");
+        }
     }
 
 
@@ -331,6 +337,16 @@ public class Game {
             return false;
         }
     
+    }
+
+    // Clear usernames from storage
+    public void usernameClear() {
+        rPlayers.clear();
+        wPlayers.clear();
+    }
+
+    public void exitGame() {
+        usernameClear();
     }
 
      public void startWordSelection(int row, int col, String playerId) {
