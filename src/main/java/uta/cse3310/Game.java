@@ -13,45 +13,38 @@ public class Game {
     private Set<String> rPlayers;
     private List<String> wPlayers;
     public PlayerType[] Button;
-    // Buttons are indexed 0 to 2499 in the code
-    // 0    1   2   .. 49
-    // 50   51  52  .. 99
-    // 100  101 102 .. 149
-    // ..   ..  ..  .. ..
-    // 2450 ..  ..  .. 2499
-
     public String[] Msg;
     public int GameId;
     public Statistics Stats;
     private int scorePlayer1;
     private int scorePlayer2;
-
-    Game(Statistics s) {
-        scorePlayer1 = 0;
-        scorePlayer2 = 0;
-
-        Stats = s;
-        Button = new PlayerType[2500];
-        // initialize it
-        initializeGrid();
-
-        Players = PlayerType.bluePLAYER;
-        // Shown to the user, 0 is bluePLAYER
-        // 1 is redPLAYER
-        Msg = new String[2];
-        Msg[0] = "Waiting for other player to join";
-        Msg[1] = "";
-    }
     public  Set<String> uniqueWords = new HashSet<>();
     private final int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1}; // Changes in row indices for 8 directions
     private final int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1}; // Changes in column indices for 8 directions
- //gh repo clone utastudents/cse3310_sp24_group_15
     
-    private List<Word> wordsu = new ArrayList<>();
+    private List<Word> words1 = new ArrayList<>(); // Store word positions here
+    Grid gridg = new Grid(words1);
+    public char[][] grid = gridg.grid;
+    Game(Statistics s) {
+        scorePlayer1 = 0;
+        scorePlayer2 = 0;
+        Stats = s;
+        Button = new PlayerType[2500];
+        initializeGrid();
+        Players = PlayerType.bluePLAYER;
+        Msg = new String[2];
+        Msg[0] = "Waiting for other player to join";
+        Msg[1] = "";
+        rPlayers = new HashSet<>();
+        wPlayers = new ArrayList<>();
+        // Set your desired grid size here
+        populateGridWithWords();
+    }
+     //gh repo clone utastudents/cse3310_sp24_group_15
+    
         // Add words to the list if needed
 
-    Grid gridg = new Grid(wordsu);
-    public char[][] grid = gridg.grid;
+    
     public char randomLetter() { // Method name should start with lowercase
         String chars = "abcdefghijklmnopqrstuvwxyz"; // test, use abcdefghijklmnopqrstuvwxyz
         Random rnd = new Random();
@@ -68,7 +61,40 @@ public class Game {
         }
     }
     
-
+    private String determineDirection(int startRow, int startCol, int endRow, int endCol) {
+        // Horizontal direction
+        if (startRow == endRow && startCol != endCol) {
+            return (startCol < endCol) ? "EAST" : "WEST"; // "EAST" for right, "WEST" for left
+        }
+        // Vertical direction
+        else if (startCol == endCol && startRow != endRow) {
+            return (startRow < endRow) ? "SOUTH" : "NORTH"; // "SOUTH" for down, "NORTH" for up
+        }
+        // Diagonal direction
+        else if (Math.abs(startRow - endRow) == Math.abs(startCol - endCol)) {
+            // Northeast direction
+            if (startRow > endRow && startCol < endCol) {
+                return "NORTHEAST";
+            }
+            // Southeast direction
+            else if (startRow > endRow && startCol > endCol) {
+                return "NORTHWEST";
+            }
+            // Northwest direction
+            else if (startRow < endRow && startCol < endCol) {
+                return "SOUTHEAST";
+            }
+            // Southwest direction
+            else if (startRow < endRow && startCol > endCol) {
+                return "SOUTHWEST";
+            }
+        }
+        // If none of the above conditions match, return "INVALID" to indicate an invalid direction
+        return "INVALID";
+    }
+    
+    
+    
     // Populate the grid with words and random letters
     public void populateGridWithWords() {
         // Get random words from the WordBank
@@ -95,26 +121,45 @@ public class Game {
 
     // Place a word in the grid
     private void placeWord(String word) {
-        Random rand = new Random();
-        int row = rand.nextInt(grid.length);
-        int col = rand.nextInt(grid[0].length);
-        int direction = rand.nextInt(8); // 8 possible directions (horizontal, vertical, diagonal)
-    
-        // Check if the word can fit in the chosen direction
-        boolean canPlace = checkPlaceWord(word, row, col, direction);
-    
-        if (canPlace) {
-            // Place the word in the grid
-            int len = word.length();
-            for (int i = 0; i < len; i++) {
-                grid[row][col] = word.charAt(i);
-                row += dx[direction];//move to the next position based on the chosen direction
-                col += dy[direction];
-            }
-        } else {
-            placeWord(word); //retry placing the word
+    Random rand = new Random();
+    int row = rand.nextInt(grid.length);
+    int col = rand.nextInt(grid[0].length);
+    int direction = rand.nextInt(8); // 8 possible directions (horizontal, vertical, diagonal)
+
+    // Check if the word can fit in the chosen direction
+    boolean canPlace = checkPlaceWord(word, row, col, direction);
+
+    if (canPlace) {
+        // Place the word in the grid
+        int len = word.length();
+        int currentRow = row;
+        int currentCol = col;
+        for (int i = 0; i < len; i++) {
+            grid[currentRow][currentCol] = word.charAt(i);
+            currentRow += dx[direction]; // Move to the next position based on the chosen direction
+            currentCol += dy[direction];
         }
+
+        // Determine the direction name
+        String directionName = determineDirection(row, col, currentRow - dx[direction], currentCol - dy[direction]);
+
+        // Add the word to the list along with its position and direction
+        words1.add(new Word(word, row, col, directionName));
+
+        // Get the last added Word object
+        Word wordObj = words1.get(words1.size() - 1);
+
+        // Print the word details
+        System.out.println("Word: " + wordObj.getWord());
+        System.out.println("Start Row: " + wordObj.getStartRow());
+        System.out.println("Start Col: " + wordObj.getStartCol());
+        System.out.println("Direction: " + wordObj.getDirection());
+    } else {
+        placeWord(word); // Retry placing the word
     }
+}
+
+    
     public Game() {
         // Constructor code here
         // You can initialize the Game object without any parameters
@@ -137,6 +182,7 @@ public class Game {
             row += dx[direction];
             col += dy[direction];
         }
+
     
         return true; 
     }
