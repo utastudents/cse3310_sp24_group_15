@@ -10,14 +10,14 @@ import uta.cse3310.Grid;
 
 public class Game {
     PlayerType Players;
-    private Set<String> rPlayers;
-    private List<String> wPlayers;
+    public Set<String> rPlayers;
+    public List<String> wPlayers;
     public PlayerType[] Button;
     public String[] Msg;
     public int GameId;
     public Statistics Stats;
-    private int scorePlayer1;
-    private int scorePlayer2;
+    public int scorePlayer1;
+    public int scorePlayer2;
     public  Set<String> uniqueWords = new HashSet<>();
     private final int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1}; // Changes in row indices for 8 directions
     private final int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1}; // Changes in column indices for 8 directions

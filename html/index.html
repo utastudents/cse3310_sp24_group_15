@@ -53,6 +53,32 @@
     // Create the connection with the server
     socket = new WebSocket(serverUrl);
 
+        class UserEvent {
+            
+            constructor(){
+
+                this.gameId = 0;
+                this.playerId = 0;
+                this.button = 0;
+                this.userName = '';
+                this.buttonRow = 0;
+                this.buttonCol = 0;
+
+            }
+
+            setUsername(nickname){
+                this.userName = nickname;
+            }
+
+            setButtonRow(Row){
+                this.buttonRow = Row;
+            }
+
+            setButtonCol(Col){
+                this.buttonCol = Col;
+            }
+        }
+
 socket.onopen = function(event) {
     console.log("Connection established.");
 };
@@ -248,11 +274,22 @@ function makeTable(gridArray) {
             const cell = document.createElement("td");
             const button = document.createElement("button");
 
+            //sets button id to row #
+            var buttonId = (row);
+            button.id = buttonId;
+
             // Set the text of the button to the value from the gridArray
             button.textContent = gridArray[row][col];
 
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function(){
+                //to be changed to set button to player color
                 button.style.backgroundColor = "red";
+                //sends row and col through json
+                U.setButtonRow(this.id);
+                U.setButtonCol(cell.cellIndex);
+                socket.send(JSON.stringify(U));
+                socket.log(JSON.stringify(U));
+                
             });
 
             cell.appendChild(button);
@@ -260,23 +297,30 @@ function makeTable(gridArray) {
         }
 
         gameTable.appendChild(tableRow);
+
     }
-}
-
-
-
-function buttonClick(){
-
-    console.log("Botton ${row} ${col} pressed");
 
 }
 
 function joinLobby() {
-    
-    let nickname = document.getElementById("nickname").value;
-    document.getElementById("nickname").value = '';
-    document.getElementById("nicknameInput").style.display = "none";
-    document.getElementById("waitingPlayersList").style.display = "block";
+
+    var nickname = document.getElementById("nickname").value;
+
+    if(nickname.trim === ""){
+
+        //error for empty nickname
+
+    } else {
+
+        document.getElementById("nicknameInput").style.display = "none";
+        document.getElementById("waitingPlayersList").style.display = "block";
+
+        U = new UserEvent();
+        U.setUsername(nickname);
+        socket.send(JSON.stringify(U));
+        socket.log(JSON.stringify(U));
+
+    }
     //socket.send(JSON.stringify({ type: "joinLobby", nickname: nickname }));
 }
 
