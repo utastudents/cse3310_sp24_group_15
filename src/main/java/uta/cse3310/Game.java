@@ -258,21 +258,26 @@ public class Game {
     }
 
     private boolean CheckLine(int[] a, int[] b) {
-        // Uses the checks to see if the word is from the word list
-        // Takes in the two button arrays the player selects
-        // CheckHorizontal();
-        // CheckDiagonal();
-        // CheckVertical();
-        // will return boolean from the check
-        // If the two button arrays do not meet the horizontal
-        // diagonal or vertical check it will return false
-        return true;
+         //return checkHorizontal(a, b) || checkVertical(a, b) || checkDiagonal(a, b);
+         return true;
     }
 
     private boolean CheckHorizontal(int[] a, int[] b) {
         //checks horizontal word with word bank
         //returns boolean
+
+        int startRow = a[0];
+        int startCol = a[1];
+        int endRow = b[0];
+        int endCol = b[1];
+       //checking the direction
+       String checkDirection  = determineDirection(startRow, startCol, endRow, endCol);
+       if(checkDirection.equals("EAST") || checkDirection.equals("WEST")){
         return true;
+       }else{
+        return false;
+       }
+
     }
 
     private boolean CheckVertical(int[] a, int[] b) {
