@@ -52,7 +52,8 @@
  import java.net.UnknownHostException;
  import java.nio.ByteBuffer;
  import java.util.Collections;
-import java.util.Set;
+ import java.util.Set;
+ import java.util.ArrayList;
 
 import org.java_websocket.WebSocket;
  import org.java_websocket.drafts.Draft;
@@ -72,6 +73,7 @@ import org.java_websocket.WebSocket;
    // All games currently underway on this server are stored in
    // the vector ActiveGames
    Vector<Game> ActiveGames = new Vector<Game>();
+   ArrayList<String> playerList = new ArrayList<String>();
  
  
    int GameId = 1;
@@ -211,6 +213,13 @@ import org.java_websocket.WebSocket;
      if(eventType.equals("username")){
         System.out.println("Username Received: " + U.userName);
         //add functionality for adding username to server's waiting player list
+        playerList.add(U.userName);
+        WebSocketMessage usernames = new WebSocketMessage("userNames", playerList);
+        Gson gsonNames = new Gson();
+        String jsonUsername = gsonNames.toJson(usernames);
+        conn.send(jsonUsername);
+        System.out.println(jsonUsername);
+      
      }
 
      if(eventType.equals("gameStart")){

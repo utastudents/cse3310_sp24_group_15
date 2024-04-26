@@ -53,7 +53,7 @@
     // Create the connection with the server
     socket = new WebSocket(serverUrl);
 
-        const nicknames = [];
+        var nicknames = [];
 
         class UserEvent {
             
@@ -102,6 +102,7 @@ socket.onmessage = function(event) {
     // Call makeTable() with the received array
     makeTable(receivedGridArray);
     }   
+
     if (message.type === "WordList") {
     // Handle array data
     let receivedWordlist = message.data;
@@ -137,12 +138,20 @@ socket.onmessage = function(event) {
     wordBank.style.display = "none";
 }
 
- 
     if (message.type === "waitingPlayers") {
         // Handle waiting players data
         console.log("names");
         let players = message.data;
         displayWaitingPlayers(players);
+    }
+
+    if (message.type === "userNames"){
+
+        let namesReceived = message.data;
+        console.log("usernames received by frontEnd");
+        nicknames = [];
+        addUsernames(namesReceived);
+        updateNames();
     }
 };
 // Set the timer for 5 minutes (in seconds)
@@ -321,20 +330,8 @@ function joinLobby() {
 
     } else {
 
-        //local array of nicknames for js side
-        nicknames.push(nickname);
-
-        //adds nickname to waiting player list
-        //TEMPORARY UNTIL CONNECTED TO SERVER PLAYERLIST
-        var playerList = document.getElementById("playersList");
-        var validNickname = document.createElement("li");
-        validNickname.textContent = nickname;
-        playerList.appendChild(validNickname);
-
-        //sets visibile elements to waiting page
         document.getElementById("nicknameInput").style.display = "none";
         document.getElementById("waitingPlayersList").style.display = "block";
-
         //sends nickname to java side
         U = new UserEvent();
         U.setUsername(nickname);
@@ -342,9 +339,24 @@ function joinLobby() {
         socket.send(JSON.stringify(U));
         socket.log(JSON.stringify(U));
 
-        nickname.value = "";
-
     }
+
+
+}
+
+function updateNames(){
+    
+    var playerList = document.getElementById("playersList");
+    console.log("updating usernames");
+
+    nicknames.forEach(names => {
+
+        var validNickname = document.createElement("li");
+        validNickname.textContent = names;
+        console.log("appending child: " + names);
+        playerList.appendChild(validNickname);
+
+    });
 
 }
 
@@ -362,7 +374,19 @@ function startGame() {
     U.setType("gameStart");
     socket.send(JSON.stringify(U));
     socket.log(JSON.stringify(U));
-    //socket.send(JSON.stringify({ type: "startGame" }));
+    
+}
+
+function addUsernames(receivedUsernames){
+
+    for(var i = 0; i < receivedUsernames.length; i++){
+
+        nicknames.push(receivedUsernames[i]);
+        console.log("addUsername: "+ receivedUsernames[i]);
+        console.log("nickname i: " + nicknames[i]);
+
+    }
+
 }
 
 function displayWaitingPlayers(players) {
