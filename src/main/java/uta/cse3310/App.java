@@ -204,7 +204,23 @@ import org.java_websocket.WebSocket;
      Gson gson = builder.create();
      UserEvent U = gson.fromJson(message, UserEvent.class);
      System.out.println(U.Button);
+     String eventType = U.type;
+
+
+     //RUNS FUNCTION BASED ON MESSAGE TYPE RECEIVED
+     if(eventType.equals("username")){
+        System.out.println("Username Received: " + U.userName);
+        //add functionality for adding username to server's waiting player list
+     }
+
+     if(eventType.equals("gameStart")){
+        System.out.println("Starting Game");
+        //move functionality here for game start
+     }
  
+     if(eventType.equals("buttonPress")){
+        System.out.println("Button Pressed");
+     }
  
      // Get our Game Object
      Game G = conn.getAttachment();
@@ -217,7 +233,7 @@ import org.java_websocket.WebSocket;
      jsonString = gson.toJson(G);
  
  
-     System.out.println(jsonString);
+     //System.out.println(jsonString);
      broadcast(jsonString);
    }
   

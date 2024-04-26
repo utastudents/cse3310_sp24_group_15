@@ -53,6 +53,8 @@
     // Create the connection with the server
     socket = new WebSocket(serverUrl);
 
+        const nicknames = [];
+
         class UserEvent {
             
             constructor(){
@@ -63,6 +65,7 @@
                 this.userName = '';
                 this.buttonRow = 0;
                 this.buttonCol = 0;
+                this.type = '';
 
             }
 
@@ -76,6 +79,10 @@
 
             setButtonCol(Col){
                 this.buttonCol = Col;
+            }
+
+            setType(Type){
+                this.type = Type;
             }
         }
 
@@ -287,6 +294,7 @@ function makeTable(gridArray) {
                 //sends row and col through json
                 U.setButtonRow(this.id);
                 U.setButtonCol(cell.cellIndex);
+                U.setType("buttonPress");
                 socket.send(JSON.stringify(U));
                 socket.log(JSON.stringify(U));
                 
@@ -304,27 +312,44 @@ function makeTable(gridArray) {
 
 function joinLobby() {
 
-    var nickname = document.getElementById("nickname").value;
+    const nickname = document.getElementById("nickname").value;
 
-    if(nickname.trim === ""){
+    //checks if nickname is not empty or NULL
+    if(nickname.trim == undefined || !nickname){
 
-        //error for empty nickname
+        alert("Please Enter a Valid Username");
 
     } else {
 
+        //local array of nicknames for js side
+        nicknames.push(nickname);
+
+        //adds nickname to waiting player list
+        //TEMPORARY UNTIL CONNECTED TO SERVER PLAYERLIST
+        var playerList = document.getElementById("playersList");
+        var validNickname = document.createElement("li");
+        validNickname.textContent = nickname;
+        playerList.appendChild(validNickname);
+
+        //sets visibile elements to waiting page
         document.getElementById("nicknameInput").style.display = "none";
         document.getElementById("waitingPlayersList").style.display = "block";
 
+        //sends nickname to java side
         U = new UserEvent();
         U.setUsername(nickname);
+        U.setType("username");
         socket.send(JSON.stringify(U));
         socket.log(JSON.stringify(U));
 
+        nickname.value = "";
+
     }
-    //socket.send(JSON.stringify({ type: "joinLobby", nickname: nickname }));
+
 }
 
 function startGame() {
+
     startTimer(timerDuration, timerDisplay);
     document.getElementById("waitingPlayersList").style.display = "none";
     document.getElementById("gameTable").style.display = "grid";
@@ -334,6 +359,9 @@ function startGame() {
     document.getElementById("player1Info").textContent = "Player1: SCORE";
     document.getElementById("player2Info").textContent = "Player2: SCORE";
    
+    U.setType("gameStart");
+    socket.send(JSON.stringify(U));
+    socket.log(JSON.stringify(U));
     //socket.send(JSON.stringify({ type: "startGame" }));
 }
 
@@ -372,7 +400,6 @@ function displayWaitingPlayers(players) {
         console.error("An error occurred while displaying waiting players:", error);
     }
 }
-
 
 
     </script>
