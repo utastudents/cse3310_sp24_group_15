@@ -126,8 +126,22 @@ public class Game {
     int col = rand.nextInt(grid[0].length);
     int direction = rand.nextInt(8); // 8 possible directions (horizontal, vertical, diagonal)
 
-    // Check if the word can fit in the chosen direction
-    boolean canPlace = checkPlaceWord(word, row, col, direction);
+     // Check if the word can fit in the chosen direction and is valid horizontally, vertically, or diagonally
+    boolean canPlace = false;
+    int tries = 0;
+    while (!canPlace && tries < 10) { // Retry up to 10 times if unable to place the word
+        canPlace = checkPlaceWord(word, row, col, direction) &&
+                   (checkHorizontal(word, row, col) ||
+                    checkVertical(word, row, col) ||
+                    checkDiagonal(word, row, col));
+
+        if (!canPlace) {
+            row = rand.nextInt(grid.length);
+            col = rand.nextInt(grid[0].length);
+            direction = rand.nextInt(8);
+            tries++;
+        }
+    }
 
     if (canPlace) {
         // Place the word in the grid
@@ -250,47 +264,78 @@ public class Game {
 
     }
 
+
     public void StartGame() {
-        // will start the game and give players their color for the game
-        Msg[0] = "You are color [player1_color].";
-        Msg[1] = "You are color [player2_color].";
-        Stats.setGamesInProgress(Stats.getGamesInProgress() + 1);
+    // Will start the game and give players their color for the game
+    Msg[0] = "You are color [player1_color].";
+    Msg[1] = "You are color [player2_color].";
+
+
+    /// Create an instance of WordBank
+WordBank wordBank = new WordBank();
+
+//using this to debug
+String pickedWord = wordBank.getPickedWordFromWordBank();
+    // Print the picked word
+    System.out.println("Picked word: " + pickedWord);
+
+   
+    Stats.setGamesInProgress(Stats.getGamesInProgress() + 1);
+}
+
+
+
+   private boolean checkHorizontal(String word, int row, int col) {
+    int len = word.length();
+    if (col + len > grid[0].length) {
+        return false; 
     }
-
-    private boolean CheckLine(int[] a, int[] b) {
-         //return checkHorizontal(a, b) || checkVertical(a, b) || checkDiagonal(a, b);
-         return true;
+    for (int i = 0; i < len; i++) {
+        if (grid[row][col + i] != ' ' && grid[row][col + i] != word.charAt(i)) {
+            return false; 
+        }
     }
+    return true; 
+}
 
-    private boolean CheckHorizontal(int[] a, int[] b) {
-        //checks horizontal word with word bank
-        //returns boolean
 
-        int startRow = a[0];
-        int startCol = a[1];
-        int endRow = b[0];
-        int endCol = b[1];
-       //checking the direction
-       String checkDirection  = determineDirection(startRow, startCol, endRow, endCol);
-       if(checkDirection.equals("EAST") || checkDirection.equals("WEST")){
-        return true;
-       }else{
-        return false;
-       }
-
+  private boolean checkVertical(String word, int row, int col) {
+    int len = word.length();
+    if (row + len > grid.length) {
+        return false; 
     }
-
-    private boolean CheckVertical(int[] a, int[] b) {
-        //checks vertical word with word bank
-        //returns boolean
-        return true;
+    for (int i = 0; i < len; i++) {
+        if (grid[row + i][col] != ' ' && grid[row + i][col] != word.charAt(i)) {
+            return false; 
+        }
     }
+    return true; 
+}
 
-    private boolean CheckDiagonal(int[] a, int[] b) {
-        //checks diagonal word with word bank
-        //returns boolean
-        return true;
+private boolean checkDiagonal(String word, int row, int col) {
+    
+    int len = word.length();
+    if (row + len > grid.length || col + len > grid[row].length) {
+        return false; // Word doesn't fit diagonally
     }
+    for (int i = 0; i < len; i++) {
+        if (grid[row + i][col + i] != word.charAt(i)) {
+            return false; // Word doesn't match diagonally
+        }
+    }
+    return true; 
+}
+
+
+
+private boolean checkWordPicked(String word, int startRow, int startCol) {
+    
+    return checkHorizontal(word, startRow, startCol) || 
+           checkVertical(word, startRow, startCol) || 
+           checkDiagonal(word, startRow, startCol);
+           
+}
+
 
 
     // This function returns an index for each player

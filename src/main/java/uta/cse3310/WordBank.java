@@ -24,6 +24,12 @@ public class WordBank {
         int index = rand.nextInt(WORDS.length);
         return WORDS[index];
     }
+
+
+    public String getPickedWordFromWordBank() {
+    return WordBank.getRandomWord();
+}
+
 }
 
 
