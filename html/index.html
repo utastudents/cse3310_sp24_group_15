@@ -305,7 +305,6 @@ function makeTable(gridArray) {
                 U.setButtonCol(cell.cellIndex);
                 U.setType("buttonPress");
                 socket.send(JSON.stringify(U));
-                socket.log(JSON.stringify(U));
                 
             });
 
@@ -341,7 +340,6 @@ function joinLobby() {
         U.setUsername(nickname);
         U.setType("username");
         socket.send(JSON.stringify(U));
-        socket.log(JSON.stringify(U));
 
     }
 
@@ -383,7 +381,6 @@ function startGame() {
    
     U.setType("gameStart");
     socket.send(JSON.stringify(U));
-    socket.log(JSON.stringify(U));
     
 }
 
