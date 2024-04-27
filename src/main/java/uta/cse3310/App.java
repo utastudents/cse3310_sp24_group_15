@@ -107,7 +107,7 @@ import org.java_websocket.WebSocket;
      ServerEvent E = new ServerEvent();
  
      int[] grid= {1,2,4};
-     String name = "jimmy";  
+     //String name = "jimmy";  
      Game game = new Game();
         game.initializeGrid();
         game.populateGridWithWords();
@@ -124,7 +124,7 @@ import org.java_websocket.WebSocket;
         game.PrintGame(0);
      WebSocketMessage message = new WebSocketMessage("grid", arr);
      WebSocketMessage message2 = new WebSocketMessage("WordList", usedWords);
-     WebSocketMessage message1 = new WebSocketMessage("waitingPlayers", name);
+     WebSocketMessage message1 = new WebSocketMessage("userNames", playerList);
      // Convert the message object to JSON string using Gson
      Gson gson3 = new Gson();
      String jsonString2 = gson3.toJson(message);
@@ -217,7 +217,7 @@ import org.java_websocket.WebSocket;
         WebSocketMessage usernames = new WebSocketMessage("userNames", playerList);
         Gson gsonNames = new Gson();
         String jsonUsername = gsonNames.toJson(usernames);
-        conn.send(jsonUsername);
+        broadcast(jsonUsername);
         System.out.println(jsonUsername);
       
      }

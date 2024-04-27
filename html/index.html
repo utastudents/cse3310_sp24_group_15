@@ -54,6 +54,7 @@
     socket = new WebSocket(serverUrl);
 
         var nicknames = [];
+        var displayNames = [];
 
         class UserEvent {
             
@@ -149,7 +150,6 @@ socket.onmessage = function(event) {
 
         let namesReceived = message.data;
         console.log("usernames received by frontEnd");
-        nicknames = [];
         addUsernames(namesReceived);
         updateNames();
     }
@@ -321,12 +321,16 @@ function makeTable(gridArray) {
 
 function joinLobby() {
 
-    const nickname = document.getElementById("nickname").value;
+    const nickname = document.getElementById("nickname").value.trim();
 
     //checks if nickname is not empty or NULL
-    if(nickname.trim == undefined || !nickname){
+    if(nickname === null || !nickname || nickname === ""){
 
         alert("Please Enter a Valid Username");
+
+    } else if(nicknames.includes(nickname)){
+
+        alert("Username Already in Use");
 
     } else {
 
@@ -347,14 +351,20 @@ function joinLobby() {
 function updateNames(){
     
     var playerList = document.getElementById("playersList");
-    console.log("updating usernames");
 
     nicknames.forEach(names => {
 
-        var validNickname = document.createElement("li");
-        validNickname.textContent = names;
-        console.log("appending child: " + names);
-        playerList.appendChild(validNickname);
+        if(displayNames.includes(names)){
+
+        } else {
+
+            var validNickname = document.createElement("li");
+            validNickname.textContent = names;
+            console.log("appending child: " + names);
+            playerList.appendChild(validNickname);
+            displayNames.push(names);
+
+        }
 
     });
 
@@ -381,9 +391,15 @@ function addUsernames(receivedUsernames){
 
     for(var i = 0; i < receivedUsernames.length; i++){
 
-        nicknames.push(receivedUsernames[i]);
-        console.log("addUsername: "+ receivedUsernames[i]);
-        console.log("nickname i: " + nicknames[i]);
+        if(nicknames.includes(receivedUsernames[i])){
+
+        } else {
+
+            nicknames.push(receivedUsernames[i]);
+            console.log("addUsername: "+ receivedUsernames[i]);
+            console.log("nickname i: " + nicknames[i]);
+
+        }
 
     }
 
