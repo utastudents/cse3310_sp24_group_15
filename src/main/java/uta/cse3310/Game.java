@@ -8,6 +8,7 @@ import java.util.Set;
 import uta.cse3310.WordBank;
 import uta.cse3310.Grid;
 
+
 public class Game {
     PlayerType Players;
     public Set<String> rPlayers;
@@ -266,18 +267,12 @@ public class Game {
 
 
     public void StartGame() {
+        
     // Will start the game and give players their color for the game
     Msg[0] = "You are color [player1_color].";
     Msg[1] = "You are color [player2_color].";
 
 
-    /// Create an instance of WordBank
-WordBank wordBank = new WordBank();
-
-//using this to debug
-String pickedWord = wordBank.getPickedWordFromWordBank();
-    // Print the picked word
-    System.out.println("Picked word: " + pickedWord);
 
    
     Stats.setGamesInProgress(Stats.getGamesInProgress() + 1);
