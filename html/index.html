@@ -66,6 +66,7 @@
                 this.buttonRow = 0;
                 this.buttonCol = 0;
                 this.type = '';
+                this.wordHighlighted = '';
 
             }
 
@@ -83,6 +84,9 @@
 
             setType(Type){
                 this.type = Type;
+            }
+            setWordHighlighted(word) {
+                this.wordHighlighted = word; // Setter for the highlighted word
             }
         }
 
@@ -173,44 +177,110 @@ let previousLetterIndex = null;
 // Function to highlight a letter in the game table
 
 
-function dehighlightAllLettersInGameTable() {
+let isSelecting = false;
+let startCell = null;
+let highlightedWords = []; // Array to store the values of highlighted buttons
+
+function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
+    gameTable.innerHTML = ''; // Clear previous table if any
 
-    // Check if gameTable exists
-    if (gameTable) {
-        const cells = gameTable.querySelectorAll("td");
+    for (var row = 0; row < gridArray.length; row++) {
+        const tableRow = document.createElement("tr");
 
-        // Iterate over each cell in the game table
-        for (let i = 0; i < cells.length; i++) {
-            // Get the button element in the current cell
-            const button = cells[i].querySelector("button");
-            
-            // Clear the color of the button
-            if (button && button.style.backgroundColor == "yellow") {
+        for (var col = 0; col < gridArray[row].length; col++) {
+            const cell = document.createElement("td");
+            const button = document.createElement("button");
 
-                button.style.backgroundColor = "#f5fffa"; // Clear the color
-                
-            }
+            // Set button id to `row_col` format
+            button.id = `${row}_${col}`;
+            button.textContent = gridArray[row][col];
+
+            button.addEventListener("click", function(event) {
+                handleButtonClick(event, this, cell.cellIndex);
+            });
+
+            cell.appendChild(button);
+            tableRow.appendChild(cell);
         }
+
+        gameTable.appendChild(tableRow);
     }
 }
 
-
-// Function to repeat the process of highlighting a letter after the timer
-function highlight() {
-    const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
-    const randomIndex = Math.floor(Math.random() * wordBank.length); // Get a random index
-    const randomWordElement = wordBank[randomIndex]; // Select the random word element
-    const randomWord = randomWordElement.textContent.trim(); // Get the text content of the selected element
-
-    // Iterate over each letter in the random word and highlight it
-    
-        const letter = randomWord[0].toUpperCase(); // Convert letter to uppercase
-        searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
-    
-
-     
+function handleButtonClick(event, button, cellIndex) {
+    if (!isSelecting) {
+        // First click sets the starting cell
+        clearHighlights(); // Clear previous highlights if any
+        startCell = button;
+        startCell.style.backgroundColor = "red";  // Highlight the start cell
+        isSelecting = true;
+        highlightedWords = []; // Reset the highlighted words array
+    } else {
+        // Second click sets the ending cell and checks if selection is valid
+        let endCell = button;
+        if (isValidSelection(startCell, endCell)) {
+            highlightRange(startCell, endCell);
+            sendHighlightedWord(highlightedWords, startCell, endCell);
+        } else {
+            console.log("Invalid selection. Please select a straight or diagonal line.");
+            alert("Invalid selection. Please select a straight or diagonal line.");
+        }
+        isSelecting = false;
+        startCell = null;
+        clearHighlights();
+    }
 }
+
+function sendHighlightedWord(highlightedWords, startCell, endCell) {
+    const wordsString = highlightedWords.join(''); // Join all elements into a single string
+        U = new UserEvent();
+        U.setWordHighlighted(wordsString);
+        U.setType("wordHighlight");
+        socket.send(JSON.stringify(U));
+   
+    
+    console.log("Sent highlighted word:", wordsString);
+}
+
+function isValidSelection(start, end) {
+    const startCoords = start.id.split('_').map(Number);
+    const endCoords = end.id.split('_').map(Number);
+    const rowDifference = Math.abs(startCoords[0] - endCoords[0]);
+    const colDifference = Math.abs(startCoords[1] - endCoords[1]);
+
+    return rowDifference === colDifference || rowDifference === 0 || colDifference === 0;
+}
+
+function highlightRange(start, end) {
+    const startCoords = start.id.split('_').map(Number);
+    const endCoords = end.id.split('_').map(Number);
+    const stepRow = startCoords[0] === endCoords[0] ? 0 : (startCoords[0] < endCoords[0] ? 1 : -1);
+    const stepCol = startCoords[1] === endCoords[1] ? 0 : (startCoords[1] < endCoords[1] ? 1 : -1);
+
+    let currentRow = startCoords[0];
+    let currentCol = startCoords[1];
+
+    while (currentRow !== endCoords[0] + stepRow || currentCol !== endCoords[1] + stepCol) {
+        let button = document.getElementById(`${currentRow}_${currentCol}`);
+        button.style.backgroundColor = "red"; // Highlight the button
+        highlightedWords.push(button.textContent); // Store the button's text content
+        currentRow += stepRow;
+        currentCol += stepCol;
+    }
+}
+
+function clearHighlights() {
+    const buttons = document.querySelectorAll("#gameTable button");
+    buttons.forEach(button => {
+        button.style.backgroundColor = ""; // Reset background color
+    });
+}
+
+
+
+
+
 
 // Function to search and highlight a letter in the game table
 function searchLetterInGameTableAndHighlight(letter) {
@@ -280,9 +350,8 @@ function scratchOut(word){
   
 }
 
-function makeTable(gridArray) {
-    const gameTable = document.getElementById("gameTable");
 
+<<<<<<< HEAD
     for (var row = 0; row < gridArray.length; row++) {
         const tableRow = document.createElement("tr");
 
@@ -318,6 +387,8 @@ function makeTable(gridArray) {
     }
 
 }
+=======
+>>>>>>> d5a9bb02832e6737750eae50ca98d31fa2601bc2
 
 function joinLobby() {
 
