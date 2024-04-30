@@ -198,6 +198,7 @@
 
         var nicknames = [];
         var displayNames = [];
+        var myUsername = '';
 
         class UserEvent {
             
@@ -552,6 +553,8 @@ function joinLobby() {
         document.getElementById("nicknameInput").style.display = "none";
         document.getElementById("waitingPlayersList").style.display = "block";
         //sends nickname to java side
+        myUsername = nickname;
+        console.log("my username is: " + myUsername);
         U = new UserEvent();
         U.setUsername(nickname);
         U.setType("username");
@@ -565,20 +568,15 @@ function joinLobby() {
 function updateNames(){
     
     var playerList = document.getElementById("playersList");
+    playerList.innerHTML = "";
 
     nicknames.forEach(names => {
 
-        if(displayNames.includes(names)){
-
-        } else {
-
-            var validNickname = document.createElement("li");
-            validNickname.textContent = names;
-            console.log("appending child: " + names);
-            playerList.appendChild(validNickname);
-            displayNames.push(names);
-
-        }
+        var validNickname = document.createElement("li");
+        validNickname.textContent = names;
+        console.log("appending child: " + names);
+        playerList.appendChild(validNickname);
+        displayNames.push(names);
 
     });
 
@@ -602,17 +600,13 @@ function startGame() {
 
 function addUsernames(receivedUsernames){
 
+    nicknames = [];
+
     for(var i = 0; i < receivedUsernames.length; i++){
 
-        if(nicknames.includes(receivedUsernames[i])){
-
-        } else {
-
-            nicknames.push(receivedUsernames[i]);
-            console.log("addUsername: "+ receivedUsernames[i]);
-            console.log("nickname i: " + nicknames[i]);
-
-        }
+        nicknames.push(receivedUsernames[i]);
+        console.log("addUsername: "+ receivedUsernames[i]);
+        console.log("nickname i: " + nicknames[i]);
 
     }
 
@@ -654,6 +648,14 @@ function displayWaitingPlayers(players) {
     }
 }
 
+window.addEventListener('beforeunload', function(){
+    const myUsername = document.getElementById("nickname").value.trim();
+    if(myUsername != ''){
+        U.setUsername(myUsername);
+        U.setType("removeUsername");
+        socket.send(JSON.stringify(U));
+    }
+});
 
     </script>
 </body>

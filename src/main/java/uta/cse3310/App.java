@@ -223,6 +223,16 @@ import org.java_websocket.WebSocket;
       
      }
 
+     if(eventType.equals("removeUsername")){
+        System.out.println("Username Received for Removal: " + U.userName);
+        playerList.remove(U.userName);
+        WebSocketMessage usernames = new WebSocketMessage("userNames", playerList);
+        Gson gsonNames = new Gson();
+        String jsonUsername = gsonNames.toJson(usernames);
+        broadcast(jsonUsername);
+        System.out.println(jsonUsername);
+     }
+
      if(eventType.equals("gameStart")){
         System.out.println("Starting Game");
         //move functionality here for game start
