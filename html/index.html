@@ -183,8 +183,9 @@
         </div>
         <div class="info">
           <div class="playerInfo" id="playerInfo" style="display:none;">
-              <ul class="player1Info" id="player1Info"></ul>
-              <ul class="player2Info" id="player2Info"></ul>
+            <ul class="player1Info" id="player1Info">player1:</ul>
+            <ul class="player2Info" id="player2Info">player2:</ul>
+            
           </div>
           <div class="hintTimer" id="hintTimer" style="display:none;">
             <ul class="textTimer">Time until Hint: </ul>
@@ -234,6 +235,8 @@
                 this.buttonCol = 0;
                 this.type = '';
                 this.wordHighlighted = '';
+                this.score1 =0;
+                this.score2 =0;
             }
 
             setUsername(nickname){
@@ -262,11 +265,11 @@
                 this.wordHighlighted = word; // Setter for the highlighted word
             }
         }
+        var globalWordBank = [];  // This will store your word bank globally
 
 socket.onopen = function(event) {
     console.log("Connection established.");
 };
-
 socket.onmessage = function(event) {
     let message = JSON.parse(event.data);
     
@@ -299,7 +302,7 @@ socket.onmessage = function(event) {
             // Handle array data
             let receivedWordlist = message.data;
             console.log("WordList received");
-            
+            globalWordBank = receivedWordlist;
             // Get the word bank element
             const wordBank = document.getElementById("wordBank");
 
@@ -360,6 +363,14 @@ socket.onmessage = function(event) {
             console.log("gameId set to: " + myGameId);
         }
 
+    }
+    if (message.type === "score1") {
+        score1received = message.data;
+        player1Info.innerHTML = "Player 1: " + score1received;
+    }
+    if (message.type === "score2") {
+        score2received = message.data;
+        player1Info.innerHTML = "Player 2: " + score2received;
     }
 };
 // Set the timer for 5 minutes (in seconds)
@@ -429,7 +440,7 @@ function handleButtonClick(event, button, cellIndex) {
         // First click sets the starting cell
         clearHighlights(); // Clear previous highlights if any
         startCell = button;
-        startCell.style.backgroundColor = "red";  // Highlight the start cell
+        startCell.style.backgroundColor = myColor;  // Highlight the start cell
         isSelecting = true;
         highlightedWords = []; // Reset the highlighted words array
     } else {
@@ -476,16 +487,28 @@ let player2Score = 0;
 let currentPlayer = 1; // Assume player 1 starts, this need to modified because the current
 
 function incrementPlayerScore() {
-    if (currentPlayer === 1) {
+    console.log("update red");
+    console.log(myColor);
+    if (myColor === "red") {
+        var player1Info = document.getElementById("player1Info");
+
+    // Update the innerHTML of each element
+    
+    
+        console.log("update red");
         player1Score++;
-        document.getElementById("player1Info").textContent = "Player1: " + player1Score;
-    } else if (currentPlayer === 2) {
+        player1Info.innerHTML = "Player 1: " + player1Score;
+        
+    } else if (myColor === "blue") {
+        var player2Info = document.getElementById("player2Info");
+        console.log("yoq");
         player2Score++;
-        document.getElementById("player2Info").textContent = "Player2: " + player2Score;
+        player2Info.innerHTML = "Player 2: " + player2Score;
+        
     }
 
-    // Switch player after scoring
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
+   
+   
 }
 
 function sendHighlightedWord(highlightedWords, startCell, endCell) {
@@ -497,18 +520,17 @@ function sendHighlightedWord(highlightedWords, startCell, endCell) {
         startRow: startCell.id.split('_')[0], // Assuming IDs are formatted as 'row_col'
         startCol: startCell.id.split('_')[1],
         endRow: endCell.id.split('_')[0],
-        endCol: endCell.id.split('_')[1]
+        endCol: endCell.id.split('_')[1],
+        score1: player1Score,
+        score2: player2Score
     };
     socket.send(JSON.stringify(data));
-
+    console.log(globalWordBank);
     // Increment player score if the highlighted word matches a word in the word bank
-    const wordBankWords = document.querySelectorAll(".wordBank .word");
-    wordBankWords.forEach(wordElement => {
-        if (wordElement.textContent.trim() === wordsString) {
-            // Increment player score (assuming you have a variable for player score)
-            incrementPlayerScore();
-        }
-    });
+    if(globalWordBank.includes(wordsString)){
+        
+        incrementPlayerScore();
+    }
 }
 
 
@@ -532,7 +554,7 @@ function highlightRange(start, end) {
 
     while (currentRow !== endCoords[0] + stepRow || currentCol !== endCoords[1] + stepCol) {
         let button = document.getElementById(`${currentRow}_${currentCol}`);
-        button.style.backgroundColor = "red"; // Highlight the button
+        button.style.backgroundColor = myColor; // Highlight the button
         highlightedWords.push(button.textContent); // Store the button's text content
         currentRow += stepRow;
         currentCol += stepCol;
@@ -666,8 +688,7 @@ function startGame() {
     document.getElementById("playerInfo").style.display = "block";
     document.getElementById("wordBank").style.display = "block";
     document.getElementById("hintTimer").style.display = "block";
-    document.getElementById("player1Info").textContent = "Player1: SCORE";
-    document.getElementById("player2Info").textContent = "Player2: SCORE";
+  
    
     U.setType("gameStart");
     socket.send(JSON.stringify(U));
