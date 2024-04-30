@@ -77,6 +77,7 @@ import org.java_websocket.WebSocket;
    ArrayList<String> qPlayerList = new ArrayList<String>();
  
    int GameId = 1;
+   int score11 = 0;
  
  
    public App(int port) {
@@ -194,7 +195,7 @@ import org.java_websocket.WebSocket;
      G = null;
    }
  
- 
+  
    @Override
    public void onMessage(WebSocket conn, String message) {
      System.out.println(conn + ": " + message);
@@ -311,6 +312,26 @@ import org.java_websocket.WebSocket;
         System.out.println("startcol Received: " + U.buttonCol);
         System.out.println("Endcol Received: " + U.buttonColE);
      }
+     if(eventType.equals("score1")){
+      System.out.println("highlight Received: " + U.score1);
+      score11 = U.score1;
+      WebSocketMessage score1Message = new WebSocketMessage("score1", score11, GameId, "none");
+          String score1S = gson4.toJson(score1Message);
+          broadcast(score1S);
+          System.out.println(score1S);
+      
+     }
+     if(eventType.equals("score2")){
+      System.out.println("highlight Received: " + U.score2);
+      score11 = U.score2;
+      WebSocketMessage score1Message = new WebSocketMessage("score2", score11, GameId, "none");
+          String score2S = gson4.toJson(score1Message);
+          broadcast(score2S);
+          System.out.println(score2S);
+      
+     }
+     
+     
  
      // Get our Game Object
     
