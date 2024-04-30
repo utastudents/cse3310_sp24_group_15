@@ -209,6 +209,7 @@ import org.java_websocket.WebSocket;
      String eventType = U.type;
 
 
+
      //RUNS FUNCTION BASED ON MESSAGE TYPE RECEIVED
      if(eventType.equals("username")){
         System.out.println("Username Received: " + U.userName);
@@ -228,22 +229,20 @@ import org.java_websocket.WebSocket;
      }
  
      if(eventType.equals("wordHighlight")){
-        System.out.println("highlight Received: " + U.wordHighlight);
+        System.out.println("highlight Received: " + U.wordHighlighted);
+        System.out.println("startrow Received: " + U.buttonRow);
+        System.out.println("Endrow Received: " + U.buttonRowE);
+        System.out.println("startcol Received: " + U.buttonCol);
+        System.out.println("Endcol Received: " + U.buttonColE);
      }
  
      // Get our Game Object
-     Game G = conn.getAttachment();
-     G.Update(U);
+    
  
  
      // send out the game state every time
      // to everyone
-     String jsonString;
-     jsonString = gson.toJson(G);
- 
- 
-     //System.out.println(jsonString);
-     broadcast(jsonString);
+     
    }
   
  

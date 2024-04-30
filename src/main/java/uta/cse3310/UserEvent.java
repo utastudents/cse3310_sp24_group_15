@@ -8,9 +8,11 @@ public class UserEvent {
     int Button; // button number from 0 to 2499
     char[][] grid;
     String userName;
+    int buttonRowE;
+    int buttonColE;
     int buttonRow;
     int buttonCol;
-    String wordHighlight;
+    String wordHighlighted;
     String type;
 
 
@@ -18,7 +20,7 @@ public class UserEvent {
 
     }
 
-    UserEvent(int _GameId, PlayerType _PlayerIdx, int _Button, String _userName, int _buttonRow, int _buttonCol, String _type, String _wordHighlight){
+    UserEvent(int _GameId, PlayerType _PlayerIdx, int _Button, String _userName, int _buttonRow, int _buttonCol, String _type, String _wordHighlighted, int _buttonRowE, int _buttonColE){
         GameId = _GameId;
         PlayerIdx = _PlayerIdx;
         Button = _Button;
@@ -26,6 +28,8 @@ public class UserEvent {
         buttonRow = _buttonRow;
         buttonCol = _buttonCol;
         type = _type;
-        wordHighlight = _wordHighlight;
+        wordHighlighted = _wordHighlighted;
+        buttonRowE = _buttonRowE;
+        buttonColE = _buttonColE;
     }
 }
