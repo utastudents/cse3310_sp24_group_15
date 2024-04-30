@@ -161,7 +161,10 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            width: 60vw; /* 50% of the viewport width */
+            height: 40vh; /* 30% of the viewport height */
         }
+
 
 
         .strikethrough{
@@ -245,7 +248,7 @@
         class UserEvent {
             
             constructor(){
-                this.gameId = 0;
+                this.GameId = 0;
                 this.playerId = 0;
                 this.button = 0;
                 this.userName = '';
@@ -270,7 +273,9 @@
             setScore2(score){
                 this.score2 = score;
             }
-            
+            setGameId(Id){
+                this.GameId = Id;
+            }
             
 
             setButtonCol(Col){
@@ -296,6 +301,7 @@
 socket.onopen = function(event) {
     console.log("Connection established.");
 };
+var gID= 0;
 socket.onmessage = function(event) {
     let message = JSON.parse(event.data);
     
@@ -325,30 +331,19 @@ socket.onmessage = function(event) {
 
         if(receivedGameId === myGameId){
 
-            // Handle array data
+           
             let receivedWordlist = message.data;
             console.log("WordList received");
             globalWordBank = receivedWordlist;
-            // Get the word bank element
             const wordBank = document.getElementById("wordBank");
-
-            // Display the word bank element
             wordBank.style.display = "block";
-
-            // Update the word bank content with received word list
             const wordBankList = wordBank.querySelector(".wordBank");
             wordBankList.innerHTML = "Word Bank: ";
-
-            // Get a random index within the range of receivedWordlist
             const randomIndex = Math.floor(Math.random() * receivedWordlist.length);
             const randomWord = receivedWordlist[randomIndex];
 
-            // Extract the first letter of the random word
             const firstLetter = randomWord.charAt(0).toUpperCase(); // Assuming you want the first letter in uppercase
-            
-            // Now you can use the 'firstLetter' variable for further processing
-
-            // Iterate over the received word list and update the list items
+        
             receivedWordlist.forEach((word, index) => {
                 const listItem = wordBank.querySelector(`#w${index + 1}`);
                 if (listItem) {
@@ -386,21 +381,27 @@ socket.onmessage = function(event) {
             console.log("color set to: " + myColor);
             let gameIdReceived = message.gameId;
             myGameId = gameIdReceived;
+            gID = myGameId;
             console.log("gameId set to: " + myGameId);
         }
 
     }
     if (message.type === "score1") {
+        let usernameCheck = message.gameId;
+        if (usernameCheck === myGameId){
         score1received = message.data;
         player1Score = score1received;
         player1Info.innerHTML = "Player 1: " + score1received;
         checkGameOver();
+        }
     }
     if (message.type === "score2") {
+        let usernameCheck = message.gameId;
+        if (usernameCheck === myGameId){
         score2received = message.data;
         player2Score = score2received;
         player2Info.innerHTML = "Player 2: " + score2received;
-        checkGameOver();
+        }
     }
 };
 // Set the timer for 5 minutes (in seconds)
@@ -420,6 +421,7 @@ function generateRandomWordFromWordBank() {
 let previousLetterIndex = null;
 
 // Function to highlight a letter in the game table
+
 
 
 let isSelecting = false;
@@ -445,7 +447,7 @@ function restartGame() {
     document.getElementById("gameOverScreen").style.display = "none";
     startGame(); // You will need to implement this to reset your game setup
 }
-
+console.log(""+myGameId);
 function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
     gameTable.innerHTML = ''; // Clear previous table if any
@@ -488,17 +490,34 @@ function checkGameOver() {
 function backToMenu() {
     location.reload();  // Reloads the current document
 }
-
-
 function displayGameOver() {
+    hideGameElements();  // Hide game elements first
+
     const gameOverScreen = document.getElementById("gameOverScreen");
-    gameOverScreen.style.display = "block";
-    document.getElementById("gameTable").style.display = "none";
-    document.getElementById("wordBank").style.display = "none";
+    gameOverScreen.style.display = "block";  // Then show the game over screen
 
     let winner = player1Score >= 10 ? "Player 1" : "Player 2";
     document.getElementById("winnerName").textContent = winner + " wins!";
 }
+
+
+
+function showGameElements() {
+    const elementsToShow = [
+        document.getElementById("gameTable"),
+        document.getElementById("wordBank"),
+        document.getElementById("playerInfo"),
+         // Add other IDs as needed
+    ];
+
+    elementsToShow.forEach(element => {
+        if (element) element.style.display = 'block';  // Reset display properties
+    });
+    document.getElementById("hintTimer").style.color = "LightSteelBlue";
+
+
+}
+
 
 // Add this check to where scores are incremented
 function incrementPlayerScore() {
@@ -509,7 +528,19 @@ function incrementPlayerScore() {
         player2Score++;
         document.getElementById("player2Info").innerHTML = "Player 2: " + player2Score;
     }
-     // Check if the game should end after score update
+    
+}
+function hideGameElements() {
+    const elementsToHide = [
+        document.getElementById("gameTable"),
+        document.getElementById("wordBank"),
+        document.getElementById("playerInfo"),
+        document.getElementById("hintTimer"), 
+    ];
+
+    elementsToHide.forEach(element => {
+        if (element) element.style.display = 'none';
+    });
 }
 
 
@@ -531,6 +562,8 @@ function sendHighlightedWord(highlightedWords, startCell, endCell) {
         J.setScore1(player1Score);
         J.setScore2(player2Score);
         J.setType("wordHighlight");
+        J.setGameId(myGameId);
+        console.log(myGameId);
         console.log(J.wordHighlighted);
         socket.send(JSON.stringify(J));
 
