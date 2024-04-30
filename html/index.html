@@ -332,6 +332,7 @@ let isSelecting = false;
 let startCell = null;
 let endCell = null;
 let highlightedWords = []; // Array to store the values of highlighted buttons
+
 function highlight() {
     const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
     const randomIndex = Math.floor(Math.random() * wordBank.length); // Get a random index
@@ -344,6 +345,7 @@ function highlight() {
         searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
      
 }
+
 function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
     gameTable.innerHTML = ''; // Clear previous table if any
@@ -388,12 +390,14 @@ function handleButtonClick(event, button, cellIndex) {
         } else {
             console.log("Invalid selection. Please select a straight or diagonal line.");
             alert("Invalid selection. Please select a straight or diagonal line.");
+            startCell.style.backgroundColor = "#fff";
         }
         isSelecting = false;
         startCell = null;
         clearHighlights();
     }
 }
+
 function dehighlightAllLettersInGameTable() {
     const gameTable = document.getElementById("gameTable");
 
@@ -415,26 +419,6 @@ function dehighlightAllLettersInGameTable() {
         }
     }
 }
-
-let player1Score = 0;
-let player2Score = 0;
-let currentPlayer = 1; // Assume player 1 starts, this need to modified because the current
-
-function incrementPlayerScore() {
-    if (currentPlayer === 1) {
-        player1Score++;
-        document.getElementById("player1Info").textContent = "Player1: " + player1Score;
-    } else if (currentPlayer === 2) {
-        player2Score++;
-        document.getElementById("player2Info").textContent = "Player2: " + player2Score;
-    }
-
-    // Switch player after scoring
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
-}
-
-
-
 
 
 function sendHighlightedWord(highlightedWords, startCell, endCell) {
@@ -612,6 +596,9 @@ function updateNames(){
 
 function startGame() {
 
+    U.setType("gameStart");
+    socket.send(JSON.stringify(U));
+
     startTimer(timerDuration, timerDisplay);
     document.getElementById("waitingPlayersList").style.display = "none";
     document.getElementById("gameTable").style.display = "grid";
@@ -620,9 +607,6 @@ function startGame() {
     document.getElementById("hintTimer").style.display = "block";
     document.getElementById("player1Info").textContent = "Player1: SCORE";
     document.getElementById("player2Info").textContent = "Player2: SCORE";
-   
-    U.setType("gameStart");
-    socket.send(JSON.stringify(U));
     
 }
 
