@@ -227,14 +227,16 @@ import org.java_websocket.WebSocket;
         
         System.out.println("highlight Received: " + U.score1);
         System.out.println("highlight Received: " + U.score2);
-        WebSocketMessage Playerscores = new WebSocketMessage("score1", U.score1, 0, "none");
-        Gson gsonNames = new Gson();
-        String jsonPlayerscores = gsonNames.toJson(Playerscores);
+        System.out.println("g Received: " + U.GameId);
+
+        WebSocketMessage Playerscores = new WebSocketMessage("score1", U.score1, U.GameId, "none");
+        Gson gsonNames1 = new Gson();
+        String jsonPlayerscores = gsonNames1.toJson(Playerscores);
         broadcast(jsonPlayerscores);
         System.out.println(jsonPlayerscores);
-        WebSocketMessage Playerscores2 = new WebSocketMessage("score2", U.score2, 0, "none");
-      
-        String jsonPlayerscores2 = gsonNames.toJson(Playerscores2);
+        WebSocketMessage Playerscores2 = new WebSocketMessage("score2", U.score2, U.GameId, "none");
+    
+        String jsonPlayerscores2 = gsonNames1.toJson(Playerscores2);
         broadcast(jsonPlayerscores2);
         System.out.println(jsonPlayerscores2);
      }
@@ -319,26 +321,8 @@ import org.java_websocket.WebSocket;
         }
         
      }
- 
      
-     if(eventType.equals("score1")){
-      System.out.println("highlight Received: " + U.score1);
-      score11 = U.score1;
-      WebSocketMessage score1Message = new WebSocketMessage("score1", score11, GameId, "none");
-          String score1S = gson4.toJson(score1Message);
-          broadcast(score1S);
-          System.out.println(score1S);
-      
-     }
-     if(eventType.equals("score2")){
-      System.out.println("highlight Received: " + U.score2);
-      score11 = U.score2;
-      WebSocketMessage score1Message = new WebSocketMessage("score2", score11, GameId, "none");
-          String score2S = gson4.toJson(score1Message);
-          broadcast(score2S);
-          System.out.println(score2S);
-      
-     }
+     
      
      
  
