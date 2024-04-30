@@ -54,6 +54,7 @@
     socket = new WebSocket(serverUrl);
 
         var nicknames = [];
+        var displayNames = [];
 
         class UserEvent {
             
@@ -80,6 +81,13 @@
 
             setButtonCol(Col){
                 this.buttonCol = Col;
+            }
+            setButtonRowE(Row){
+                this.buttonRowE = Row;
+            }
+
+            setButtonColE(Col){
+                this.buttonColE = Col;
             }
 
             setType(Type){
@@ -153,7 +161,6 @@ socket.onmessage = function(event) {
 
         let namesReceived = message.data;
         console.log("usernames received by frontEnd");
-        nicknames = [];
         addUsernames(namesReceived);
         updateNames();
     }
@@ -180,7 +187,18 @@ let previousLetterIndex = null;
 let isSelecting = false;
 let startCell = null;
 let highlightedWords = []; // Array to store the values of highlighted buttons
+function highlight() {
+    const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
+    const randomIndex = Math.floor(Math.random() * wordBank.length); // Get a random index
+    const randomWordElement = wordBank[randomIndex]; // Select the random word element
+    const randomWord = randomWordElement.textContent.trim(); // Get the text content of the selected element
 
+    // Iterate over each letter in the random word and highlight it
+    
+        const letter = randomWord[0].toUpperCase(); // Convert letter to uppercase
+        searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
+     
+}
 function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
     gameTable.innerHTML = ''; // Clear previous table if any
@@ -231,11 +249,37 @@ function handleButtonClick(event, button, cellIndex) {
         clearHighlights();
     }
 }
+function dehighlightAllLettersInGameTable() {
+    const gameTable = document.getElementById("gameTable");
+
+    // Check if gameTable exists
+    if (gameTable) {
+        const cells = gameTable.querySelectorAll("td");
+
+        // Iterate over each cell in the game table
+        for (let i = 0; i < cells.length; i++) {
+            // Get the button element in the current cell
+            const button = cells[i].querySelector("button");
+            
+            // Clear the color of the button
+            if (button && button.style.backgroundColor == "yellow") {
+
+                button.style.backgroundColor = "#f5fffa"; // Clear the color
+                
+            }
+        }
+    }
+}
+
 
 function sendHighlightedWord(highlightedWords, startCell, endCell) {
     const wordsString = highlightedWords.join(''); // Join all elements into a single string
         U = new UserEvent();
         U.setWordHighlighted(wordsString);
+        U.setButtonRow(startCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
+        U.setButtonCol(startCell.id.split('_')[1]);
+        U.setButtonRowE(endCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
+        U.setButtonColE(endCell.id.split('_')[1]);
         U.setType("wordHighlight");
         socket.send(JSON.stringify(U));
    
@@ -308,8 +352,6 @@ function searchLetterInGameTableAndHighlight(letter) {
     }
 }
 
-// Example usage:
-
 
 // Function to start the countdown
 function startTimer(duration, display) {
@@ -339,11 +381,6 @@ function startTimer(duration, display) {
     }, 1000);
 }
 
-
-
-
-
-
 function scratchOut(word){
   
   word.classList.toggle('strikethrough');
@@ -352,51 +389,18 @@ function scratchOut(word){
 
 
 
-    for (var row = 0; row < gridArray.length; row++) {
-        const tableRow = document.createElement("tr");
-
-        for (var col = 0; col < gridArray[row].length; col++) {
-            const cell = document.createElement("td");
-            const button = document.createElement("button");
-
-            //sets button id to row #
-            var buttonId = (row);
-            button.id = buttonId;
-
-            // Set the text of the button to the value from the gridArray
-            button.textContent = gridArray[row][col];
-
-            button.addEventListener("click", function(){
-                //to be changed to set button to player color
-                button.style.backgroundColor = "red";
-                //sends row and col through json
-                U.setButtonRow(this.id);
-                U.setButtonCol(cell.cellIndex);
-                U.setType("buttonPress");
-                socket.send(JSON.stringify(U));
-                socket.log(JSON.stringify(U));
-                
-            });
-
-            cell.appendChild(button);
-            tableRow.appendChild(cell);
-        }
-
-        gameTable.appendChild(tableRow);
-
-    }
-
-}
-
-
 function joinLobby() {
 
-    const nickname = document.getElementById("nickname").value;
+    const nickname = document.getElementById("nickname").value.trim();
 
     //checks if nickname is not empty or NULL
-    if(nickname.trim == undefined || !nickname){
+    if(nickname === null || !nickname || nickname === ""){
 
         alert("Please Enter a Valid Username");
+
+    } else if(nicknames.includes(nickname)){
+
+        alert("Username Already in Use");
 
     } else {
 
@@ -407,7 +411,6 @@ function joinLobby() {
         U.setUsername(nickname);
         U.setType("username");
         socket.send(JSON.stringify(U));
-        socket.log(JSON.stringify(U));
 
     }
 
@@ -417,14 +420,20 @@ function joinLobby() {
 function updateNames(){
     
     var playerList = document.getElementById("playersList");
-    console.log("updating usernames");
 
     nicknames.forEach(names => {
 
-        var validNickname = document.createElement("li");
-        validNickname.textContent = names;
-        console.log("appending child: " + names);
-        playerList.appendChild(validNickname);
+        if(displayNames.includes(names)){
+
+        } else {
+
+            var validNickname = document.createElement("li");
+            validNickname.textContent = names;
+            console.log("appending child: " + names);
+            playerList.appendChild(validNickname);
+            displayNames.push(names);
+
+        }
 
     });
 
@@ -443,7 +452,6 @@ function startGame() {
    
     U.setType("gameStart");
     socket.send(JSON.stringify(U));
-    socket.log(JSON.stringify(U));
     
 }
 
@@ -451,9 +459,15 @@ function addUsernames(receivedUsernames){
 
     for(var i = 0; i < receivedUsernames.length; i++){
 
-        nicknames.push(receivedUsernames[i]);
-        console.log("addUsername: "+ receivedUsernames[i]);
-        console.log("nickname i: " + nicknames[i]);
+        if(nicknames.includes(receivedUsernames[i])){
+
+        } else {
+
+            nicknames.push(receivedUsernames[i]);
+            console.log("addUsername: "+ receivedUsernames[i]);
+            console.log("nickname i: " + nicknames[i]);
+
+        }
 
     }
 
