@@ -106,7 +106,7 @@ import org.java_websocket.WebSocket;
  
      ServerEvent E = new ServerEvent();
  
-     int[] grid= {1,2,4};
+     //int[] grid= {1,2,4};
      //String name = "jimmy";  
      Game game = new Game();
         game.initializeGrid();

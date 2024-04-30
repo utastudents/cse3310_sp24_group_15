@@ -332,6 +332,7 @@ let isSelecting = false;
 let startCell = null;
 let endCell = null;
 let highlightedWords = []; // Array to store the values of highlighted buttons
+
 function highlight() {
     const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
     const randomIndex = Math.floor(Math.random() * wordBank.length); // Get a random index
@@ -344,6 +345,7 @@ function highlight() {
         searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
      
 }
+
 function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
     gameTable.innerHTML = ''; // Clear previous table if any
@@ -388,12 +390,14 @@ function handleButtonClick(event, button, cellIndex) {
         } else {
             console.log("Invalid selection. Please select a straight or diagonal line.");
             alert("Invalid selection. Please select a straight or diagonal line.");
+            startCell.style.backgroundColor = "#fff";
         }
         isSelecting = false;
         startCell = null;
         clearHighlights();
     }
 }
+
 function dehighlightAllLettersInGameTable() {
     const gameTable = document.getElementById("gameTable");
 
@@ -415,7 +419,6 @@ function dehighlightAllLettersInGameTable() {
         }
     }
 }
-
 
 function sendHighlightedWord(highlightedWords, startCell, endCell) {
     const wordsString = highlightedWords.join(''); // Join all elements into a single string
@@ -584,6 +587,9 @@ function updateNames(){
 
 function startGame() {
 
+    U.setType("gameStart");
+    socket.send(JSON.stringify(U));
+
     startTimer(timerDuration, timerDisplay);
     document.getElementById("waitingPlayersList").style.display = "none";
     document.getElementById("gameTable").style.display = "grid";
@@ -592,9 +598,6 @@ function startGame() {
     document.getElementById("hintTimer").style.display = "block";
     document.getElementById("player1Info").textContent = "Player1: SCORE";
     document.getElementById("player2Info").textContent = "Player2: SCORE";
-   
-    U.setType("gameStart");
-    socket.send(JSON.stringify(U));
     
 }
 
