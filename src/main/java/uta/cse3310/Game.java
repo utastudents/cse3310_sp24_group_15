@@ -17,6 +17,8 @@ public class Game {
     public String[] Msg;
     public int GameId;
     public Statistics Stats;
+    public String bluePlayer;
+    public String redPlayer;
     public int scorePlayer1;
     public int scorePlayer2;
     public  Set<String> uniqueWords = new HashSet<>();
@@ -26,6 +28,7 @@ public class Game {
     private List<Word> words1 = new ArrayList<>(); // Store word positions here
     Grid gridg = new Grid(words1);
     public char[][] grid = gridg.grid;
+
     Game(Statistics s) {
         scorePlayer1 = 0;
         scorePlayer2 = 0;

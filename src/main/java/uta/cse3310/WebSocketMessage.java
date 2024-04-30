@@ -2,10 +2,15 @@ package uta.cse3310;
 public class WebSocketMessage {
     private String type;
     private Object data;
+    private int gameId;
+    private String username;
 
-    public WebSocketMessage(String type, Object data) {
+
+    public WebSocketMessage(String type, Object data, int gameId, String username) {
         this.type = type;
         this.data = data;
+        this.gameId = gameId;
+        this.username = username;
     }
 
     // Getters and setters
@@ -23,6 +28,22 @@ public class WebSocketMessage {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public int getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 }
 /*int[] grid= {1,2,4};

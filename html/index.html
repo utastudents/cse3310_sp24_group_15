@@ -219,6 +219,9 @@
         var nicknames = [];
         var displayNames = [];
         var myUsername = '';
+        var myColor = '';
+        var myScore = '';
+        var myGameId = 0;
 
         class UserEvent {
             
@@ -268,48 +271,66 @@ socket.onmessage = function(event) {
     let message = JSON.parse(event.data);
     
     // Check the type of message
+
+    //check if message is grid and its for my game (gameId check)
     if (message.type === "grid") {
-    // Handle array data
-    let receivedGridArray = message.data;
-    console.log("array received");
+
+        let receivedGameId = message.gameId;
+
+        if(receivedGameId === myGameId){
+
+            // Handle array data
+            let receivedGridArray = message.data;
+            console.log("array received");
     
-    // Call makeTable() with the received array
-    makeTable(receivedGridArray);
+            // Call makeTable() with the received array
+            makeTable(receivedGridArray);
+
+        }
+
     }   
 
     if (message.type === "WordList") {
-    // Handle array data
-    let receivedWordlist = message.data;
-    console.log("WordList received");
+
+        let receivedGameId = message.gameId;
+
+        if(receivedGameId === myGameId){
+
+            // Handle array data
+            let receivedWordlist = message.data;
+            console.log("WordList received");
+            
+            // Get the word bank element
+            const wordBank = document.getElementById("wordBank");
+
+            // Display the word bank element
+            wordBank.style.display = "block";
+
+            // Update the word bank content with received word list
+            const wordBankList = wordBank.querySelector(".wordBank");
+            wordBankList.innerHTML = "Word Bank: ";
+
+            // Get a random index within the range of receivedWordlist
+            const randomIndex = Math.floor(Math.random() * receivedWordlist.length);
+            const randomWord = receivedWordlist[randomIndex];
+
+            // Extract the first letter of the random word
+            const firstLetter = randomWord.charAt(0).toUpperCase(); // Assuming you want the first letter in uppercase
+            
+            // Now you can use the 'firstLetter' variable for further processing
+
+            // Iterate over the received word list and update the list items
+            receivedWordlist.forEach((word, index) => {
+                const listItem = wordBank.querySelector(`#w${index + 1}`);
+                if (listItem) {
+                    listItem.textContent = word;
+                }
+            });
+
+    //wordBank.style.display = "none";
+
+    }
     
-    // Get the word bank element
-    const wordBank = document.getElementById("wordBank");
-
-    // Display the word bank element
-    wordBank.style.display = "block";
-
-    // Update the word bank content with received word list
-    const wordBankList = wordBank.querySelector(".wordBank");
-    wordBankList.innerHTML = "Word Bank: ";
-
-    // Get a random index within the range of receivedWordlist
-    const randomIndex = Math.floor(Math.random() * receivedWordlist.length);
-    const randomWord = receivedWordlist[randomIndex];
-
-    // Extract the first letter of the random word
-    const firstLetter = randomWord.charAt(0).toUpperCase(); // Assuming you want the first letter in uppercase
-    
-    // Now you can use the 'firstLetter' variable for further processing
-
-    // Iterate over the received word list and update the list items
-    receivedWordlist.forEach((word, index) => {
-        const listItem = wordBank.querySelector(`#w${index + 1}`);
-        if (listItem) {
-            listItem.textContent = word;
-        }
-    });
-
-    wordBank.style.display = "none";
 }
 
     if (message.type === "waitingPlayers") {
@@ -325,6 +346,20 @@ socket.onmessage = function(event) {
         console.log("usernames received by frontEnd");
         addUsernames(namesReceived);
         updateNames();
+    }
+
+    if (message.type === "giveColor"){
+
+        let usernameCheck = message.username;
+        if (usernameCheck === myUsername){
+            let colorReceived = message.data;
+            myColor = colorReceived;
+            console.log("color set to: " + myColor);
+            let gameIdReceived = message.gameId;
+            myGameId = gameIdReceived;
+            console.log("gameId set to: " + myGameId);
+        }
+
     }
 };
 // Set the timer for 5 minutes (in seconds)
