@@ -388,6 +388,7 @@ function handleButtonClick(event, button, cellIndex) {
         } else {
             console.log("Invalid selection. Please select a straight or diagonal line.");
             alert("Invalid selection. Please select a straight or diagonal line.");
+            startCell.style.backgroundColor = "#fff";
         }
         isSelecting = false;
         startCell = null;
