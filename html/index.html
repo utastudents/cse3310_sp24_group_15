@@ -131,11 +131,11 @@
         }
 
         .player1Info{
-            color: blue;
+            color: red;
         }
 
         .player2Info{
-            color: red;
+            color: blue;
         }
 
         .info{
@@ -151,6 +151,18 @@
             padding: 10px;
             background-color: rgb(239, 243, 244);
         }
+        #gameOverScreen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
 
         .strikethrough{
             text-decoration: line-through;
@@ -181,10 +193,16 @@
     <div class="container">
         <div class="buttonTable" id="gameTable" style="display:none;">    
         </div>
+        <div id="gameOverScreen" style="display:none;">
+            <h1>Game Over</h1>
+            <h2 id="winnerName"></h2>
+            <button onclick="backToMenu()">Back to Menu</button>
+        </div>
+        
         <div class="info">
           <div class="playerInfo" id="playerInfo" style="display:none;">
-            <ul class="player1Info" id="player1Info">player1:</ul>
-            <ul class="player2Info" id="player2Info">player2:</ul>
+            <ul class="player1Info" id="player1Info">Player1:</ul>
+            <ul class="player2Info" id="player2Info">Player2:</ul>
             
           </div>
           <div class="hintTimer" id="hintTimer" style="display:none;">
@@ -376,11 +394,13 @@ socket.onmessage = function(event) {
         score1received = message.data;
         player1Score = score1received;
         player1Info.innerHTML = "Player 1: " + score1received;
+        checkGameOver();
     }
     if (message.type === "score2") {
         score2received = message.data;
         player2Score = score2received;
         player2Info.innerHTML = "Player 2: " + score2received;
+        checkGameOver();
     }
 };
 // Set the timer for 5 minutes (in seconds)
@@ -417,6 +437,14 @@ function highlight() {
         const letter = randomWord[0].toUpperCase(); // Convert letter to uppercase
         searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
 }
+function restartGame() {
+    player1Score = 0;
+    player2Score = 0;
+    document.getElementById("player1Info").innerHTML = "Player 1: 0";
+    document.getElementById("player2Info").innerHTML = "Player 2: 0";
+    document.getElementById("gameOverScreen").style.display = "none";
+    startGame(); // You will need to implement this to reset your game setup
+}
 
 function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
@@ -452,18 +480,38 @@ var player2Score = 0;
 // var socket = new WebSocket("URL");
 // var globalWordBank = ["example", "words", "here"];
 
-function incrementPlayerScore() {
-    
-    if (myColor === "red") {
-        var player1Info = document.getElementById("player1Info");
-        player1Score++;
-        player1Info.innerHTML = "Player 1: " + player1Score;
-    } else if (myColor === "blue") {
-        var player2Info = document.getElementById("player2Info");
-        player2Score++;
-        player2Info.innerHTML = "Player 2: " + player2Score;
+function checkGameOver() {
+    if (player1Score >= 2 || player2Score >= 2) {
+        displayGameOver();  // Call function to display game over message
     }
 }
+function backToMenu() {
+    location.reload();  // Reloads the current document
+}
+
+
+function displayGameOver() {
+    const gameOverScreen = document.getElementById("gameOverScreen");
+    gameOverScreen.style.display = "block";
+    document.getElementById("gameTable").style.display = "none";
+    document.getElementById("wordBank").style.display = "none";
+
+    let winner = player1Score >= 10 ? "Player 1" : "Player 2";
+    document.getElementById("winnerName").textContent = winner + " wins!";
+}
+
+// Add this check to where scores are incremented
+function incrementPlayerScore() {
+    if (myColor === "red") {
+        player1Score++;
+        document.getElementById("player1Info").innerHTML = "Player 1: " + player1Score;
+    } else if (myColor === "blue") {
+        player2Score++;
+        document.getElementById("player2Info").innerHTML = "Player 2: " + player2Score;
+    }
+     // Check if the game should end after score update
+}
+
 
 
 
