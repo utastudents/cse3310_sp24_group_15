@@ -186,6 +186,7 @@ let previousLetterIndex = null;
 
 let isSelecting = false;
 let startCell = null;
+let endCell = null;
 let highlightedWords = []; // Array to store the values of highlighted buttons
 function highlight() {
     const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
@@ -274,14 +275,15 @@ function dehighlightAllLettersInGameTable() {
 
 function sendHighlightedWord(highlightedWords, startCell, endCell) {
     const wordsString = highlightedWords.join(''); // Join all elements into a single string
-        U = new UserEvent();
-        U.setWordHighlighted(wordsString);
-        U.setButtonRow(startCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
-        U.setButtonCol(startCell.id.split('_')[1]);
-        U.setButtonRowE(endCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
-        U.setButtonColE(endCell.id.split('_')[1]);
-        U.setType("wordHighlight");
-        socket.send(JSON.stringify(U));
+        J = new UserEvent();
+        J.setWordHighlighted(wordsString);
+        J.setButtonRow(startCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
+        J.setButtonCol(startCell.id.split('_')[1]);
+        J.setButtonRowE(endCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
+        J.setButtonColE(endCell.id.split('_')[1]);
+        J.setType("wordHighlight");
+        console.log(J.wordHighlighted);
+        socket.send(JSON.stringify(J));
    
     
     console.log("Sent highlighted word:", wordsString);
