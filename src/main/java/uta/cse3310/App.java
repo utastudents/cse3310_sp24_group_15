@@ -54,8 +54,6 @@
  import java.util.Collections;
  import java.util.Set;
  import java.util.ArrayList;
- import java.lang.StringBuilder;
-
 
 import org.java_websocket.WebSocket;
  import org.java_websocket.drafts.Draft;
@@ -197,56 +195,57 @@ import org.java_websocket.WebSocket;
    }
  
  
-  @Override
-public void onMessage(WebSocket conn, String message) {
-    System.out.println(conn + ": " + message);
+   @Override
+   public void onMessage(WebSocket conn, String message) {
+     System.out.println(conn + ": " + message);
+ 
+ 
+     // Bring in the data from the webpage
+     // A UserEvent is all that is allowed at this point
+     GsonBuilder builder = new GsonBuilder();
+     Gson gson = builder.create();
+     UserEvent U = gson.fromJson(message, UserEvent.class);
+     System.out.println(U.Button);
+     String eventType = U.type;
 
-    // Deserialize the JSON message into a UserEvent object
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.create();
-    UserEvent U = gson.fromJson(message, UserEvent.class);
-    String eventType = U.type;
 
-    // Handling different types of events
-    if (eventType.equals("username")) {
-        // Handling username event
+     //RUNS FUNCTION BASED ON MESSAGE TYPE RECEIVED
+     if(eventType.equals("username")){
         System.out.println("Username Received: " + U.userName);
-        // Add functionality for adding username to server's waiting player list
+        //add functionality for adding username to server's waiting player list
         playerList.add(U.userName);
         WebSocketMessage usernames = new WebSocketMessage("userNames", playerList);
         Gson gsonNames = new Gson();
         String jsonUsername = gsonNames.toJson(usernames);
         broadcast(jsonUsername);
         System.out.println(jsonUsername);
-    } else if (eventType.equals("gameStart")) {
-        // Handling game start event
+      
+     }
+
+     if(eventType.equals("gameStart")){
         System.out.println("Starting Game");
-        // Move functionality here for game start
-    } else if (eventType.equals("buttonPress")) {
-        // Handling button press event
-        System.out.println("Button Pressed");
-
-        // Extract row and column information from the message
-        int row = U.buttonRow;
-        int col = U.buttonCol;
-        
-
-        // Perform actions based on the received row and column
-        // For example, you can update the game state, check if the button press forms a word, etc.
-
-         // Print the row and column information
-        System.out.println("Row: " + row + ", Column: " + col);
-    }
-
-    // Get the Game object attached to the WebSocket connection
-    Game G = conn.getAttachment();
-    G.Update(U);
-
-    // Send out the game state to everyone
-    String jsonString = gson.toJson(G);
-    broadcast(jsonString);
-}
-
+        //move functionality here for game start
+     }
+ 
+     if(eventType.equals("wordHighlight")){
+        System.out.println("highlight Received: " + U.wordHighlight);
+     }
+ 
+     // Get our Game Object
+     Game G = conn.getAttachment();
+     G.Update(U);
+ 
+ 
+     // send out the game state every time
+     // to everyone
+     String jsonString;
+     jsonString = gson.toJson(G);
+ 
+ 
+     //System.out.println(jsonString);
+     broadcast(jsonString);
+   }
+  
  
  
  
