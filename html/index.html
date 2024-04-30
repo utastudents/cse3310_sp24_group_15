@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplayer Word Search Game</title>
+    <title>Multiplayer Word Search Game </title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
     <style>
         body {
@@ -27,6 +27,20 @@
             margin-top: 50px;
             margin-bottom: 20px;
             color: #3d1212;
+        }
+
+        #beginGame button {
+            font-size: 45px;
+            margin-top: 75px;
+            background-color: lightgray;
+            color: #3d1212;
+            display: inline-block;
+            justify-content: center;
+            padding: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         #nicknameInput {
@@ -147,12 +161,14 @@
             left: 50%;
             top: 3%;
         }
-
     </style>
 </head>
 <body>
     <h1>TheWordSearchGame</h1>
-    <div id="nicknameInput">
+    <div id="beginGame">
+        <button onclick="beginGame()"> START </button>
+    </div>
+    <div id="nicknameInput" style="display: none;">
         <label for="nickname">Enter your nickname:</label>
         <input type="text" id="nickname">
         <button onclick="joinLobby()">submit</button>
@@ -175,7 +191,7 @@
           </div>
           <div class="timer" id="timer"></div>
           <div class="wordBank" id="wordBank" style="display:none;">
-              <h2 class="wordBank">Word Bank: </h2>
+              <h2 class="wordBank">Word Bank</h2>
               <ul class="word" onclick="scratchOut(this)" id="w1">word1</ul>
               <ul class="word" onclick="scratchOut(this)" id="w2">word2</ul>
               <ul class="word" onclick="scratchOut(this)" id="w3">word3</ul>
@@ -191,7 +207,11 @@
         
     </div>
     <script >
-      var serverUrl;
+    function beginGame() {
+        document.getElementById("beginGame").style.display = "none";
+        document.getElementById("nicknameInput").style.display = "block";
+    }
+    var serverUrl;
     serverUrl = "ws://" + window.location.hostname + ":9115";
     // Create the connection with the server
     socket = new WebSocket(serverUrl);
@@ -203,7 +223,6 @@
         class UserEvent {
             
             constructor(){
-
                 this.gameId = 0;
                 this.playerId = 0;
                 this.button = 0;
@@ -212,7 +231,6 @@
                 this.buttonCol = 0;
                 this.type = '';
                 this.wordHighlighted = '';
-
             }
 
             setUsername(nickname){
@@ -342,8 +360,8 @@ function highlight() {
     
         const letter = randomWord[0].toUpperCase(); // Convert letter to uppercase
         searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
-     
 }
+
 function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
     gameTable.innerHTML = ''; // Clear previous table if any
@@ -395,6 +413,7 @@ function handleButtonClick(event, button, cellIndex) {
         clearHighlights();
     }
 }
+
 function dehighlightAllLettersInGameTable() {
     const gameTable = document.getElementById("gameTable");
 
@@ -433,10 +452,6 @@ function incrementPlayerScore() {
     // Switch player after scoring
     currentPlayer = currentPlayer === 1 ? 2 : 1;
 }
-
-
-
-
 
 function sendHighlightedWord(highlightedWords, startCell, endCell) {
     const wordsString = highlightedWords.join(''); // Join all elements into a single string
@@ -495,9 +510,6 @@ function clearHighlights() {
         //button.style.backgroundColor = ""; // Reset background color
     });
 }
-
-
-
 
 
 
