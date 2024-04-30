@@ -223,6 +223,21 @@ import org.java_websocket.WebSocket;
         System.out.println(jsonUsername);
       
      }
+     if(eventType.equals("wordHighlight")){
+        
+        System.out.println("highlight Received: " + U.score1);
+        System.out.println("highlight Received: " + U.score2);
+        WebSocketMessage Playerscores = new WebSocketMessage("score1", U.score1, 0, "none");
+        Gson gsonNames = new Gson();
+        String jsonPlayerscores = gsonNames.toJson(Playerscores);
+        broadcast(jsonPlayerscores);
+        System.out.println(jsonPlayerscores);
+        WebSocketMessage Playerscores2 = new WebSocketMessage("score2", U.score2, 0, "none");
+      
+        String jsonPlayerscores2 = gsonNames.toJson(Playerscores2);
+        broadcast(jsonPlayerscores2);
+        System.out.println(jsonPlayerscores2);
+     }
 
      if(eventType.equals("removeUsername")){
         System.out.println("Username Received for Removal: " + U.userName);
@@ -305,13 +320,7 @@ import org.java_websocket.WebSocket;
         
      }
  
-     if(eventType.equals("wordHighlight")){
-        System.out.println("highlight Received: " + U.wordHighlighted);
-        System.out.println("startrow Received: " + U.buttonRow);
-        System.out.println("Endrow Received: " + U.buttonRowE);
-        System.out.println("startcol Received: " + U.buttonCol);
-        System.out.println("Endcol Received: " + U.buttonColE);
-     }
+     
      if(eventType.equals("score1")){
       System.out.println("highlight Received: " + U.score1);
       score11 = U.score1;
