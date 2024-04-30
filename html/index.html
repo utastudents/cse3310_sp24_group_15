@@ -246,6 +246,14 @@
             setButtonRow(Row){
                 this.buttonRow = Row;
             }
+            setScore1(score){
+                this.score1 = score;
+            }
+            setScore2(score){
+                this.score2 = score;
+            }
+            
+            
 
             setButtonCol(Col){
                 this.buttonCol = Col;
@@ -366,11 +374,13 @@ socket.onmessage = function(event) {
     }
     if (message.type === "score1") {
         score1received = message.data;
+        player1Score = score1received;
         player1Info.innerHTML = "Player 1: " + score1received;
     }
     if (message.type === "score2") {
         score2received = message.data;
-        player1Info.innerHTML = "Player 2: " + score2received;
+        player2Score = score2received;
+        player2Info.innerHTML = "Player 2: " + score2received;
     }
 };
 // Set the timer for 5 minutes (in seconds)
@@ -434,6 +444,57 @@ function makeTable(gridArray) {
         gameTable.appendChild(tableRow);
     }
 }
+var player1Score = 0;
+var player2Score = 0;
+ // Initial color, assuming player 1 is 'red' and player 2 is 'blue'
+
+// Assuming socket is already connected and globalWordBank is defined
+// var socket = new WebSocket("URL");
+// var globalWordBank = ["example", "words", "here"];
+
+function incrementPlayerScore() {
+    
+    if (myColor === "red") {
+        var player1Info = document.getElementById("player1Info");
+        player1Score++;
+        player1Info.innerHTML = "Player 1: " + player1Score;
+    } else if (myColor === "blue") {
+        var player2Info = document.getElementById("player2Info");
+        player2Score++;
+        player2Info.innerHTML = "Player 2: " + player2Score;
+    }
+}
+
+
+
+function sendHighlightedWord(highlightedWords, startCell, endCell) {
+    const wordsString = highlightedWords.join('');
+    if(globalWordBank.includes(wordsString)){
+        incrementPlayerScore();
+         
+    }
+    J = new UserEvent();
+        J.setWordHighlighted(wordsString);
+        J.setButtonRow(startCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
+        J.setButtonCol(startCell.id.split('_')[1]);
+        J.setButtonRowE(endCell.id.split('_')[0]); // Assuming IDs are formatted as 'row_col'
+        J.setButtonColE(endCell.id.split('_')[1]);
+        J.setButtonColE(endCell.id.split('_')[1]);
+        J.setScore1(player1Score);
+        J.setScore2(player2Score);
+        J.setType("wordHighlight");
+        console.log(J.wordHighlighted);
+        socket.send(JSON.stringify(J));
+
+    
+
+    
+
+    
+}
+
+// Debugging to ensure variables are set
+console.log(globalWordBank);
 
 function handleButtonClick(event, button, cellIndex) {
     if (!isSelecting) {
@@ -482,56 +543,7 @@ function dehighlightAllLettersInGameTable() {
     }
 }
 
-let player1Score = 0;
-let player2Score = 0;
-let currentPlayer = 1; // Assume player 1 starts, this need to modified because the current
 
-function incrementPlayerScore() {
-    console.log("update red");
-    console.log(myColor);
-    if (myColor === "red") {
-        var player1Info = document.getElementById("player1Info");
-
-    // Update the innerHTML of each element
-    
-    
-        console.log("update red");
-        player1Score++;
-        player1Info.innerHTML = "Player 1: " + player1Score;
-        
-    } else if (myColor === "blue") {
-        var player2Info = document.getElementById("player2Info");
-        console.log("yoq");
-        player2Score++;
-        player2Info.innerHTML = "Player 2: " + player2Score;
-        
-    }
-
-   
-   
-}
-
-function sendHighlightedWord(highlightedWords, startCell, endCell) {
-    const wordsString = highlightedWords.join(''); // Join all elements into a single string
-
-    // Send the highlighted word and its coordinates to the server
-    const data = {
-        highlightedWord: wordsString,
-        startRow: startCell.id.split('_')[0], // Assuming IDs are formatted as 'row_col'
-        startCol: startCell.id.split('_')[1],
-        endRow: endCell.id.split('_')[0],
-        endCol: endCell.id.split('_')[1],
-        score1: player1Score,
-        score2: player2Score
-    };
-    socket.send(JSON.stringify(data));
-    console.log(globalWordBank);
-    // Increment player score if the highlighted word matches a word in the word bank
-    if(globalWordBank.includes(wordsString)){
-        
-        incrementPlayerScore();
-    }
-}
 
 
 function isValidSelection(start, end) {
