@@ -10,13 +10,15 @@ public class UserEvent {
     String userName;
     int buttonRow;
     int buttonCol;
+    String wordHighlight;
     String type;
+
 
     UserEvent() {
 
     }
 
-    UserEvent(int _GameId, PlayerType _PlayerIdx, int _Button, String _userName, int _buttonRow, int _buttonCol, String _type){
+    UserEvent(int _GameId, PlayerType _PlayerIdx, int _Button, String _userName, int _buttonRow, int _buttonCol, String _type, String _wordHighlight){
         GameId = _GameId;
         PlayerIdx = _PlayerIdx;
         Button = _Button;
@@ -24,5 +26,6 @@ public class UserEvent {
         buttonRow = _buttonRow;
         buttonCol = _buttonCol;
         type = _type;
+        wordHighlight = _wordHighlight;
     }
 }
