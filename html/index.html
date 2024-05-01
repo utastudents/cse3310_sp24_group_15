@@ -621,11 +621,6 @@ function sendHighlightedWord(highlightedWords, startCell, endCell) {
         console.log(J.wordHighlighted);
         socket.send(JSON.stringify(J));
 
-    
-
-    
-
-    
 }
 
 // Debugging to ensure variables are set
@@ -658,8 +653,8 @@ function handleButtonClick(event, button, cellIndex) {
             highlightRange(startCell, endCell);
             sendHighlightedWord(highlightedWords, startCell, endCell);
         } else {
-            console.log("Invalid selection. Please select a straight or diagonal line.");
-            alert("Invalid selection. Please select a straight or diagonal line.");
+            console.log("Invalid selection. Please select a straight or diagonal line!");
+            alert("Invalid selection. Please select a straight or diagonal line!");
             //startCell.style.backgroundColor = "#fff";
 
             //reuse update color broadcast set to reset color to white
@@ -722,10 +717,51 @@ function highlightRange(start, end) {
 
     while (currentRow !== endCoords[0] + stepRow || currentCol !== endCoords[1] + stepCol) {
         let button = document.getElementById(`${currentRow}_${currentCol}`);
-        button.style.backgroundColor = myColor; // Highlight the button
+        //button.style.backgroundColor = myColor; // Highlight the button
+
         highlightedWords.push(button.textContent); // Store the button's text content
+
         currentRow += stepRow;
         currentCol += stepCol;
+    }
+
+    const wordsString = highlightedWords.join('');
+    console.log("highlighted Words: " + highlightedWords);
+    console.log("wordsString: " + wordsString);
+
+    if(globalWordBank.includes(wordsString)){
+
+        let currentRow = startCoords[0];
+        let currentCol = startCoords[1];
+    
+        while (currentRow !== endCoords[0] + stepRow || currentCol !== endCoords[1] + stepCol) {
+            let button = document.getElementById(`${currentRow}_${currentCol}`);
+            //button.style.backgroundColor = myColor; // Highlight the button
+    
+            //send word buttons to broadcast so it is highlighted for both players
+            U.setButtonRow(currentRow);
+            U.setButtonCol(currentCol);
+            U.setType("colorUpdate");
+            U.setGameId(myGameId);
+            //reusing wordHighlighted for color so we dont have so many data types in event
+            U.setWordHighlighted(myColor);
+            socket.send(JSON.stringify(U));
+    
+            currentRow += stepRow;
+            currentCol += stepCol;
+        }
+
+    } else {
+        console.log("INVALID WORD!");
+        //reuse update color broadcast set to reset color to white
+        //send second click to broadcast so it is cleared for both players
+        U.setButtonRow(startCoords[0]);
+        U.setButtonCol(startCoords[1]);
+        U.setType("colorUpdate");
+        U.setGameId(myGameId);
+        //reusing wordHighlighted for color so we dont have so many data types in event
+        U.setWordHighlighted("#f5fffa");
+        socket.send(JSON.stringify(U));
     }
 }
 
