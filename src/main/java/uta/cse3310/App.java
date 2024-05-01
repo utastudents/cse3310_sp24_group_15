@@ -242,6 +242,12 @@ import org.java_websocket.WebSocket;
         int qPlayerListSize = qPlayerList.size();
         System.out.println(qPlayerListSize + " : Players Waiting");
 
+        WebSocketMessage waiting = new WebSocketMessage("waiting", "waiting", 0, qPlayerList.get(0));
+        String jsonWait = gson4.toJson(waiting);
+        broadcast(jsonWait);
+        System.out.println(jsonWait);
+
+
         if(qPlayerListSize == 2){
 
           System.out.println("Starting Game");

@@ -194,6 +194,9 @@
         <button onclick="startGame()">Play with 2 Players</button>
     </div>
     <div class="container">
+        <div class ="waitScreen" id="waitScreen" style="display:none;">
+            <ul class="waitText">Waiting For Another Player to Join...</ul>
+        </div>
         <div class="buttonTable" id="gameTable" style="display:none;">    
         </div>
         <div id="gameOverScreen" style="display:none;">
@@ -201,7 +204,6 @@
             <h2 id="winnerName"></h2>
             <button onclick="backToMenu()">Back to Menu</button>
         </div>
-        
         <div class="info">
           <div class="playerInfo" id="playerInfo" style="display:none;">
             <ul class="player1Info" id="player1Info">Player1:</ul>
@@ -369,6 +371,20 @@ socket.onmessage = function(event) {
         displayWaitingPlayers(players);
     }
 
+    if (message.type === "waiting") {
+        if (message.username === myUsername){
+
+            console.log("waiting Received");
+            document.getElementById("playerInfo").style.display = "none";
+            document.getElementById("wordBank").style.display = "none";
+            document.getElementById("hintTimer").style.display = "none";
+            console.log("waitscreen");
+            document.getElementById("waitScreen").style.display = "block";
+            console.log("waitscreen done");
+
+        }
+    }
+
     if (message.type === "userNames"){
 
         let namesReceived = message.data;
@@ -388,6 +404,12 @@ socket.onmessage = function(event) {
             myGameId = gameIdReceived;
             gID = myGameId;
             console.log("gameId set to: " + myGameId);
+            
+            document.getElementById("playerInfo").style.display = "block";
+            document.getElementById("wordBank").style.display = "block";
+            document.getElementById("hintTimer").style.display = "block";
+            document.getElementById("waitScreen").style.display = "none";
+            startTimer(timerDuration, timerDisplay);
         }
 
     }
@@ -785,12 +807,8 @@ function updateNames(){
 
 function startGame() {
 
-    startTimer(timerDuration, timerDisplay);
     document.getElementById("waitingPlayersList").style.display = "none";
     document.getElementById("gameTable").style.display = "grid";
-    document.getElementById("playerInfo").style.display = "block";
-    document.getElementById("wordBank").style.display = "block";
-    document.getElementById("hintTimer").style.display = "block";
   
    
     U.setType("gameStart");
