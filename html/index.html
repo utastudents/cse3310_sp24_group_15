@@ -256,8 +256,9 @@
                 this.buttonCol = 0;
                 this.type = '';
                 this.wordHighlighted = '';
-                this.score1 =0;
-                this.score2 =0;
+                this.score1 = 0;
+                this.score2 = 0;
+                this.wordList = [];
             }
 
             setUsername(nickname){
@@ -294,6 +295,10 @@
             }
             setWordHighlighted(word) {
                 this.wordHighlighted = word; // Setter for the highlighted word
+            }
+
+            setWordList(wordList){
+                this.wordList = wordList;
             }
         }
         var globalWordBank = [];  // This will store your word bank globally
@@ -418,16 +423,15 @@ function generateRandomWordFromWordBank() {
     const randomWord = randomWordElement.textContent.trim(); // Get the text content of the selected element
     return randomWord;
 }
+
 let previousLetterIndex = null;
 
 // Function to highlight a letter in the game table
-
-
-
 let isSelecting = false;
 let startCell = null;
 let endCell = null;
 let highlightedWords = []; // Array to store the values of highlighted buttons
+
 function highlight() {
     const wordBank = document.querySelectorAll(".wordBank .word"); // Select all word elements
     const randomIndex = Math.floor(Math.random() * wordBank.length); // Get a random index
@@ -439,6 +443,7 @@ function highlight() {
         const letter = randomWord[0].toUpperCase(); // Convert letter to uppercase
         searchLetterInGameTableAndHighlight(letter); // Highlight the letter in the game table
 }
+
 function restartGame() {
     player1Score = 0;
     player2Score = 0;
@@ -447,7 +452,9 @@ function restartGame() {
     document.getElementById("gameOverScreen").style.display = "none";
     startGame(); // You will need to implement this to reset your game setup
 }
+
 console.log(""+myGameId);
+
 function makeTable(gridArray) {
     const gameTable = document.getElementById("gameTable");
     gameTable.innerHTML = ''; // Clear previous table if any
@@ -474,6 +481,7 @@ function makeTable(gridArray) {
         gameTable.appendChild(tableRow);
     }
 }
+
 var player1Score = 0;
 var player2Score = 0;
  // Initial color, assuming player 1 is 'red' and player 2 is 'blue'
@@ -487,9 +495,11 @@ function checkGameOver() {
         displayGameOver();  // Call function to display game over message
     }
 }
+
 function backToMenu() {
     location.reload();  // Reloads the current document
 }
+
 function displayGameOver() {
     hideGameElements();  // Hide game elements first
 
@@ -499,8 +509,6 @@ function displayGameOver() {
     let winner = player1Score >= 10 ? "Player 1" : "Player 2";
     document.getElementById("winnerName").textContent = winner + " wins!";
 }
-
-
 
 function showGameElements() {
     const elementsToShow = [
@@ -517,8 +525,6 @@ function showGameElements() {
 
 
 }
-
-
 // Add this check to where scores are incremented
 function incrementPlayerScore() {
     if (myColor === "red") {
@@ -530,6 +536,7 @@ function incrementPlayerScore() {
     }
     
 }
+
 function hideGameElements() {
     const elementsToHide = [
         document.getElementById("gameTable"),
@@ -543,13 +550,19 @@ function hideGameElements() {
     });
 }
 
-
-
-
 function sendHighlightedWord(highlightedWords, startCell, endCell) {
     const wordsString = highlightedWords.join('');
     if(globalWordBank.includes(wordsString)){
+
         incrementPlayerScore();
+
+        U.setWordHighlighted(wordsString);
+        U.setWordList(globalWordBank);
+        U.setGameId(myGameId);
+        console.log("remove Word");
+        U.setType("removeWord");
+        socket.send(JSON.stringify(U));
+
          
     }
     J = new UserEvent();
@@ -623,9 +636,6 @@ function dehighlightAllLettersInGameTable() {
         }
     }
 }
-
-
-
 
 function isValidSelection(start, end) {
     const startCoords = start.id.split('_').map(Number);

@@ -54,6 +54,7 @@
  import java.util.Collections;
  import java.util.Set;
  import java.util.ArrayList;
+ import java.util.Arrays;
 
 import org.java_websocket.WebSocket;
  import org.java_websocket.drafts.Draft;
@@ -107,36 +108,6 @@ import org.java_websocket.WebSocket;
  
      ServerEvent E = new ServerEvent();
  
-     //int[] grid= {1,2,4};
-     //String name = "jimmy";  
-    //  Game game = new Game();
-    //     game.initializeGrid();
-    //     game.populateGridWithWords();
-    //     char[][] arr = game.getGrid();
-        // Assuming game.uniqueWords is a Set<String>
-        //Set<String> uniqueWords = game.uniqueWords;
-
-        // Create a String array of the same size as the set
-        //String[] usedWords = new String[uniqueWords.size()];
-
-        // Convert the set to an array
-        //uniqueWords.toArray(usedWords);
-
-        //game.PrintGame(0);
-     //WebSocketMessage message = new WebSocketMessage("grid", arr);
-     //WebSocketMessage message2 = new WebSocketMessage("WordList", usedWords);
-     //WebSocketMessage message1 = new WebSocketMessage("userNames", playerList, 0, "none");
-     // Convert the message object to JSON string using Gson
-     //Gson gson3 = new Gson();
-     //String jsonString2 = gson3.toJson(message);
-     //String jsonString1 = gson3.toJson(message1);
-     //String jsonString3 = gson3.toJson(message2);
- 
-     // Send the JSON string through the WebSocket connection
-     //conn.send(jsonString2);
-     //conn.send(jsonString1);
-     //conn.send(jsonString3);
-     // search for a game needing a player
      Game G = null;
      for (Game i : ActiveGames) {
        if (i.Players == uta.cse3310.PlayerType.redPLAYER) {
@@ -249,6 +220,19 @@ import org.java_websocket.WebSocket;
         String jsonUsername = gsonNames.toJson(usernames);
         broadcast(jsonUsername);
         System.out.println(jsonUsername);
+     }
+
+     if(eventType.equals("removeWord")){
+        System.out.println("Word for Removal: " + U.wordHighlighted);
+        ArrayList<String> receivedWords = new ArrayList();
+        receivedWords = U.wordList;
+        receivedWords.remove(U.wordHighlighted);
+
+        WebSocketMessage wordListMessage = new WebSocketMessage("WordList", receivedWords, U.GameId, "none");
+        String jsonWordList = gson4.toJson(wordListMessage);
+        broadcast(jsonWordList);
+        System.out.println(jsonWordList);
+
      }
 
      if(eventType.equals("gameStart")){

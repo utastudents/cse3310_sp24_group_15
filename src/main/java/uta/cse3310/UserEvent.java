@@ -1,5 +1,7 @@
 package uta.cse3310;
 
+import java.util.ArrayList;
+
 // User events are sent from the webpage to the server
 
 public class UserEvent {
@@ -16,13 +18,14 @@ public class UserEvent {
     String type;
     int score1;
     int score2;
+    ArrayList<String> wordList;
 
 
     UserEvent() {
 
     }
 
-    UserEvent(int _GameId, PlayerType _PlayerIdx, int _Button, String _userName,int _score1, int _score2, int _buttonRow, int _buttonCol, String _type, String _wordHighlighted, int _buttonRowE, int _buttonColE){
+    UserEvent(int _GameId, PlayerType _PlayerIdx, int _Button, String _userName,int _score1, int _score2, int _buttonRow, int _buttonCol, String _type, String _wordHighlighted, int _buttonRowE, int _buttonColE, ArrayList<String> _wordList){
         GameId = _GameId;
         PlayerIdx = _PlayerIdx;
         Button = _Button;
@@ -35,5 +38,6 @@ public class UserEvent {
         buttonColE = _buttonColE;
         score1 =_score1;
         score2 =_score2;
+        wordList = _wordList;
     }
 }
