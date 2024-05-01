@@ -105,7 +105,7 @@ public class Game {
         WordBank wordBank = new WordBank(); // Rename the variable to start with lowercase
        
         ArrayList<String> words = new ArrayList<>();
-        while (words.size() < 20) {
+        while (words.size() < 11) {
             String word = wordBank.getRandomWord();
                 if (!uniqueWords.contains(word)) {
                     words.add(word);

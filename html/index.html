@@ -243,6 +243,9 @@
         var nicknames = [];
         var displayNames = [];
         var myUsername = '';
+        var myOp = '';
+        var redPlayer = '';
+        var bluePlayer = '';
         var myColor = '';
         var myScore = '';
         var myGameId = 0;
@@ -414,12 +417,31 @@ socket.onmessage = function(event) {
         }
 
     }
+
+    if (message.type === "givePlayers"){
+        let receivedGameId = message.gameId;
+        if (myGameId === receivedGameId){
+
+            myOp = message.data;
+
+            if(message.username === myColor && myColor === "blue"){
+                bluePlayer = myUsername;
+                redPlayer = myOp;
+            } else if (message.username === myColor && myColor === "red"){
+                bluePlayer = myOp;
+                redPlayer = myUsername;
+            }
+            document.getElementById("player1Info").innerHTML = redPlayer + " : " + player1Score;
+            document.getElementById("player2Info").innerHTML = bluePlayer + " : " + player2Score;
+        }
+    }
+    
     if (message.type === "score1") {
         let usernameCheck = message.gameId;
         if (usernameCheck === myGameId){
         score1received = message.data;
         player1Score = score1received;
-        player1Info.innerHTML = "Player 1: " + score1received;
+        player1Info.innerHTML = redPlayer + " : " + score1received;
         checkGameOver();
         }
     }
@@ -428,7 +450,8 @@ socket.onmessage = function(event) {
         if (usernameCheck === myGameId){
         score2received = message.data;
         player2Score = score2received;
-        player2Info.innerHTML = "Player 2: " + score2received;
+        player2Info.innerHTML = bluePlayer + " : " + score2received;
+        checkGameOver();
         }
     }
 
@@ -488,8 +511,8 @@ function highlight() {
 function restartGame() {
     player1Score = 0;
     player2Score = 0;
-    document.getElementById("player1Info").innerHTML = "Player 1: 0";
-    document.getElementById("player2Info").innerHTML = "Player 2: 0";
+    document.getElementById("player1Info").innerHTML = redPlayer + " : " + player1Score;
+    document.getElementById("player2Info").innerHTML = bluePlayer + " : " + player2Score;
     document.getElementById("gameOverScreen").style.display = "none";
     startGame(); // You will need to implement this to reset your game setup
 }
@@ -532,12 +555,15 @@ var player2Score = 0;
 // var globalWordBank = ["example", "words", "here"];
 
 function checkGameOver() {
-    if (player1Score >= 2 || player2Score >= 2) {
+    if (globalWordBank.length === 0) {
         displayGameOver();  // Call function to display game over message
     }
 }
 
 function backToMenu() {
+    U.setUsername(myUsername);
+    U.setType("removeUsername");
+    socket.send(JSON.stringify(U));
     location.reload();  // Reloads the current document
 }
 
@@ -570,10 +596,10 @@ function showGameElements() {
 function incrementPlayerScore() {
     if (myColor === "red") {
         player1Score++;
-        document.getElementById("player1Info").innerHTML = "Player 1: " + player1Score;
+        document.getElementById("player1Info").innerHTML = redPlayer + " : " + player1Score;
     } else if (myColor === "blue") {
         player2Score++;
-        document.getElementById("player2Info").innerHTML = "Player 2: " + player2Score;
+        document.getElementById("player2Info").innerHTML = bluePlayer + " : " + player2Score;
     }
     
 }

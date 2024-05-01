@@ -289,7 +289,13 @@ import org.java_websocket.WebSocket;
           broadcast(jsonBlue);
           System.out.println(jsonBlue);
 
-          //set blue player in game instance
+          WebSocketMessage bluePlayerSet = new WebSocketMessage("givePlayers", redPlayer, GameId, "blue");
+          String jsonBluePlayer = gson4.toJson(bluePlayerSet);
+          broadcast(jsonBluePlayer);
+          System.out.println(jsonBluePlayer);
+
+
+          //set red player in game instance
           G.redPlayer = redPlayer;
 
           //send color to js for red
@@ -298,6 +304,10 @@ import org.java_websocket.WebSocket;
           broadcast(jsonRed);
           System.out.println(jsonRed);
 
+          WebSocketMessage redPlayerSet = new WebSocketMessage("givePlayers", bluePlayer, GameId, "red");
+          String jsonRedPlayer = gson4.toJson(redPlayerSet);
+          broadcast(jsonRedPlayer);
+          System.out.println(jsonRedPlayer);
 
           ActiveGames.add(G);
           System.out.println("Starting Game");
