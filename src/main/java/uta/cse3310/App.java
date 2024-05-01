@@ -235,6 +235,21 @@ import org.java_websocket.WebSocket;
 
      }
 
+     if(eventType.equals("colorUpdate")){
+        //print for debugging if received message
+        //System.out.println("color Updating" + U.buttonRow + " : " + U.buttonCol);
+        ArrayList<Integer> buttonArr = new ArrayList();
+        buttonArr.add(U.buttonRow);
+        buttonArr.add(U.buttonCol);
+
+        //using username arg to send color since both are strings
+        WebSocketMessage colorUpdateMessage = new WebSocketMessage("colorUpdate", buttonArr, U.GameId, U.wordHighlighted);
+        String jsonColorUpdate = gson4.toJson(colorUpdateMessage);
+        broadcast(jsonColorUpdate);
+        System.out.println(jsonColorUpdate);
+
+     }
+
      if(eventType.equals("gameStart")){
 
         System.out.println("Checking to see if we can Start Game");

@@ -302,6 +302,7 @@
             setWordList(wordList){
                 this.wordList = wordList;
             }
+
         }
         var globalWordBank = [];  // This will store your word bank globally
 
@@ -430,6 +431,24 @@ socket.onmessage = function(event) {
         player2Info.innerHTML = "Player 2: " + score2received;
         }
     }
+
+    if (message.type === "colorUpdate"){
+        let receivedGameId = message.GameId;
+
+            if (receivedGameId = myGameId){
+
+                let buttonColor = message.username;
+                let buttonArr = [];
+                buttonArr = message.data;
+
+                let buttonLocation = buttonArr[0] + "_" + buttonArr[1];
+
+                document.getElementById(buttonLocation).style.backgroundColor = buttonColor;
+            
+            }
+
+    }
+
 };
 // Set the timer for 5 minutes (in seconds)
 const timerDuration = 1 * 60;
@@ -617,6 +636,18 @@ function handleButtonClick(event, button, cellIndex) {
         // First click sets the starting cell
         clearHighlights(); // Clear previous highlights if any
         startCell = button;
+        const startCoords = startCell.id.split('_').map(Number);
+
+        //send first click to broadcast so it is highlighted for both players
+        U.setButtonRow(startCoords[0]);
+        U.setButtonCol(startCoords[1]);
+        U.setType("colorUpdate");
+        U.setGameId(myGameId);
+        //reusing wordHighlighted for color so we dont have so many data types in event
+        U.setWordHighlighted(myColor);
+        socket.send(JSON.stringify(U));
+
+
         startCell.style.backgroundColor = myColor;  // Highlight the start cell
         isSelecting = true;
         highlightedWords = []; // Reset the highlighted words array
@@ -629,7 +660,19 @@ function handleButtonClick(event, button, cellIndex) {
         } else {
             console.log("Invalid selection. Please select a straight or diagonal line.");
             alert("Invalid selection. Please select a straight or diagonal line.");
-            startCell.style.backgroundColor = "#fff";
+            //startCell.style.backgroundColor = "#fff";
+
+            //reuse update color broadcast set to reset color to white
+            const startCoords = startCell.id.split('_').map(Number);
+            //send second click to broadcast so it is cleared for both players
+            U.setButtonRow(startCoords[0]);
+            U.setButtonCol(startCoords[1]);
+            U.setType("colorUpdate");
+            U.setGameId(myGameId);
+            //reusing wordHighlighted for color so we dont have so many data types in event
+            U.setWordHighlighted("#f5fffa");
+            socket.send(JSON.stringify(U));
+
         }
         isSelecting = false;
         startCell = null;
