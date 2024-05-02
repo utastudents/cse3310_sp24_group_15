@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplayer Word Search Game </title>
+    <title id="envVar"> TWSG </title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
     <style>
         body {
@@ -311,12 +311,17 @@
 
 socket.onopen = function(event) {
     console.log("Connection established.");
+    console.log(env);
 };
 var gID= 0;
 socket.onmessage = function(event) {
     let message = JSON.parse(event.data);
     
     // Check the type of message
+
+    if (message.type === "versionSend"){
+        document.title = message.data + " TWSG";
+    }
 
     //check if message is grid and its for my game (gameId check)
     if (message.type === "grid") {

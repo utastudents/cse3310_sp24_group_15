@@ -80,7 +80,8 @@ import org.java_websocket.WebSocket;
    int GameId = 1;
    int score11 = 0;
  
- 
+   public String version = System.getenv("VERSION");
+
    public App(int port) {
      super(new InetSocketAddress(port));
    }
@@ -102,57 +103,16 @@ import org.java_websocket.WebSocket;
    @Override
    public void onOpen(WebSocket conn, ClientHandshake handshake) {
  
- 
+     System.out.println("version is: " + version);
      System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
  
- 
-     ServerEvent E = new ServerEvent();
- 
-     Game G = null;
-     for (Game i : ActiveGames) {
-       if (i.Players == uta.cse3310.PlayerType.redPLAYER) {
-         G = i;
-         System.out.println("found a match");
-       }
-     }
- 
- 
-     // No matches ? Create a new Game.
-     if (G == null) {
-       G = new Game();
-       G.GameId = GameId;
-       GameId++;
-       // Add the first player
-       G.Players = uta.cse3310.PlayerType.redPLAYER;
-       ActiveGames.add(G);
-       System.out.println(" creating a new Game");
-     } else {
-       // join an existing game
-       System.out.println(" not a new game");
-       G.Players = uta.cse3310.PlayerType.bluePLAYER;
-       G.StartGame();
-     }
-     System.out.println("G.players is " + G.Players);
-     // create an event to go to only the new player
-     E.YouAre = G.Players;
-     E.GameId = G.GameId;
-     // allows the websocket to give us the Game when a message arrives
-     conn.setAttachment(G);
- 
- 
-     Gson gson = new Gson();
-     // Note only send to the single connection
-     conn.send(gson.toJson(E));
-     System.out.println(gson.toJson(E));
- 
- 
-     // The state of the game has changed, so lets send it to everyone
-     String jsonString;
-     jsonString = gson.toJson(G);
- 
- 
-     System.out.println(jsonString);
-     broadcast(jsonString);
+     WebSocketMessage versionSend = new WebSocketMessage("versionSend", version, 0, "none");
+
+     Gson gsonVersion = new Gson();
+     String jsonVersion = gsonVersion.toJson(versionSend);
+     conn.send(jsonVersion);
+     System.out.println(jsonVersion);
+
  
  
    }
