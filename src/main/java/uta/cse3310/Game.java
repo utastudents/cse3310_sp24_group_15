@@ -22,8 +22,8 @@ public class Game {
     public int scorePlayer1;
     public int scorePlayer2;
     public  Set<String> uniqueWords = new HashSet<>();
-    private final int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1}; // Changes in row indices for 8 directions
-    private final int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1}; // Changes in column indices for 8 directions
+    public final int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1}; // Changes in row indices for 8 directions
+    public final int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1}; // Changes in column indices for 8 directions
     
     private List<Word> words1 = new ArrayList<>(); // Store word positions here
     Grid gridg = new Grid(words1);
@@ -60,7 +60,7 @@ public class Game {
     public void initializeGrid() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                grid[i][j] = ' '; // Call the randomLetter method with parentheses
+                grid[i][j] = ' '; 
             }
         }
     }
@@ -93,38 +93,33 @@ public class Game {
                 return "SOUTHWEST";
             }
         }
-        // If none of the above conditions match, return "INVALID" to indicate an invalid direction
+        
         return "INVALID";
     }
     
     
     
-    // Populate the grid with words and random letters
+    // populate the grid with words and random letters
     public void populateGridWithWords() {
-        // Get random words from the WordBank
-        WordBank wordBank = new WordBank(); // Rename the variable to start with lowercase
+        
+        WordBank wordBank = new WordBank(); 
        
         ArrayList<String> words = new ArrayList<>();
-        while (words.size() < 11) {
+        while (words.size() < 20) {
             String word = wordBank.getRandomWord();
                 if (!uniqueWords.contains(word)) {
                     words.add(word);
                     uniqueWords.add(word);
                 }
             }
-
-
-        // Place words in the grid
         for (String word : words) {
             placeWord(word);
         }
-
-        // Fill empty slots with random letters
         fillEmptySlotsWithRandomLetters();
     }
 
-    // Place a word in the grid
-    private void placeWord(String word) {
+
+    public void placeWord(String word) {
     Random rand = new Random();
     int row = rand.nextInt(grid.length);
     int col = rand.nextInt(grid[0].length);
@@ -154,24 +149,24 @@ public class Game {
         int currentCol = col;
         for (int i = 0; i < len; i++) {
             grid[currentRow][currentCol] = word.charAt(i);
-            currentRow += dx[direction]; // Move to the next position based on the chosen direction
+            currentRow += dx[direction]; 
             currentCol += dy[direction];
         }
 
-        // Determine the direction name
+  
         String directionName = determineDirection(row, col, currentRow - dx[direction], currentCol - dy[direction]);
 
-        // Add the word to the list along with its position and direction
+
         words1.add(new Word(word, row, col, directionName));
 
         // Get the last added Word object
         Word wordObj = words1.get(words1.size() - 1);
 
         // Print the word details
-        //System.out.println("Word: " + wordObj.getWord());
-        //System.out.println("Start Row: " + wordObj.getStartRow());
-        //System.out.println("Start Col: " + wordObj.getStartCol());
-        //System.out.println("Direction: " + wordObj.getDirection());
+        System.out.println("Word: " + wordObj.getWord());
+        System.out.println("Start Row: " + wordObj.getStartRow());
+        System.out.println("Start Col: " + wordObj.getStartCol());
+        System.out.println("Direction: " + wordObj.getDirection());
     } else {
         placeWord(word); // Retry placing the word
     }
@@ -208,7 +203,7 @@ public class Game {
     
 
     // Fill empty slots with random letters
-    private void fillEmptySlotsWithRandomLetters() {
+    public void fillEmptySlotsWithRandomLetters() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 if (grid[i][j] == ' ') { 
