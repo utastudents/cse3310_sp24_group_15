@@ -51,9 +51,9 @@ public class GameTest extends TestCase {
     }
     public void testPlaceWordSuccess() {
         String testWord = "TEST";
-        game.placeWord(testWord); 
-
-        
+        game.initializeGrid();  // Ensure grid is initialized and empty
+        game.placeWord(testWord);
+    
         boolean wordFound = false;
         for (int i = 0; i < game.getGrid().length; i++) {
             for (int j = 0; j < game.getGrid()[0].length; j++) {
@@ -64,9 +64,10 @@ public class GameTest extends TestCase {
             }
             if (wordFound) break;
         }
-
-        assertTrue("the word should be placed on the grid.", wordFound);
+    
+        assertTrue("The word should be placed on the grid.", wordFound);
     }
+    
 
 
     private boolean findWordInGrid(String word, int startRow, int startCol) {
@@ -91,9 +92,9 @@ public class GameTest extends TestCase {
         return false;
     }
     public void testPopulateGridWithWords() {
+        game.initializeGrid();  // Ensure the grid is reset before population
         game.populateGridWithWords();
-
-        
+    
         boolean allFilled = true;
         char[][] grid = game.getGrid();
         for (int i = 0; i < grid.length; i++) {
@@ -105,12 +106,11 @@ public class GameTest extends TestCase {
             }
             if (!allFilled) break;
         }
-
-        assertTrue("all slots in the grid should be filled", allFilled);
-
-        // Optionally, check that the words are unique
-        assertTrue("words should be unique", game.uniqueWords.size() == 20);
+    
+        assertTrue("All slots in the grid should be filled", allFilled);
+        assertTrue("Words should be unique", game.uniqueWords.size() == 20);
     }
+    
     public void testInitializeGrid() {
         game.initializeGrid(); 
 
