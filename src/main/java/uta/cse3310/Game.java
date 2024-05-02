@@ -168,10 +168,10 @@ public class Game {
         Word wordObj = words1.get(words1.size() - 1);
 
         // Print the word details
-        System.out.println("Word: " + wordObj.getWord());
-        System.out.println("Start Row: " + wordObj.getStartRow());
-        System.out.println("Start Col: " + wordObj.getStartCol());
-        System.out.println("Direction: " + wordObj.getDirection());
+        //System.out.println("Word: " + wordObj.getWord());
+        //System.out.println("Start Row: " + wordObj.getStartRow());
+        //System.out.println("Start Col: " + wordObj.getStartCol());
+        //System.out.println("Direction: " + wordObj.getDirection());
     } else {
         placeWord(word); // Retry placing the word
     }

@@ -103,7 +103,7 @@ import org.java_websocket.WebSocket;
    @Override
    public void onOpen(WebSocket conn, ClientHandshake handshake) {
  
-     System.out.println("version is: " + version);
+     //System.out.println("version is: " + version);
      System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
  
      WebSocketMessage versionSend = new WebSocketMessage("versionSend", version, 0, "none");
@@ -111,7 +111,7 @@ import org.java_websocket.WebSocket;
      Gson gsonVersion = new Gson();
      String jsonVersion = gsonVersion.toJson(versionSend);
      conn.send(jsonVersion);
-     System.out.println(jsonVersion);
+     //System.out.println(jsonVersion);
 
  
  
@@ -129,7 +129,7 @@ import org.java_websocket.WebSocket;
   
    @Override
    public void onMessage(WebSocket conn, String message) {
-     System.out.println(conn + ": " + message);
+     //System.out.println(conn + ": " + message);
  
  
      // Bring in the data from the webpage
@@ -137,53 +137,53 @@ import org.java_websocket.WebSocket;
      GsonBuilder builder = new GsonBuilder();
      Gson gson = builder.create();
      UserEvent U = gson.fromJson(message, UserEvent.class);
-     System.out.println(U.Button);
+     //System.out.println(U.Button);
      String eventType = U.type;
 
      Gson gson4 = new Gson();
 
      //RUNS FUNCTION BASED ON MESSAGE TYPE RECEIVED
      if(eventType.equals("username")){
-        System.out.println("Username Received: " + U.userName);
+        //System.out.println("Username Received: " + U.userName);
         //add functionality for adding username to server's waiting player list
         playerList.add(U.userName);
         WebSocketMessage usernames = new WebSocketMessage("userNames", playerList, 0, "none");
         Gson gsonNames = new Gson();
         String jsonUsername = gsonNames.toJson(usernames);
         broadcast(jsonUsername);
-        System.out.println(jsonUsername);
+        //System.out.println(jsonUsername);
       
      }
      if(eventType.equals("wordHighlight")){
         
-        System.out.println("highlight Received: " + U.score1);
-        System.out.println("highlight Received: " + U.score2);
-        System.out.println("g Received: " + U.GameId);
+        //System.out.println("highlight Received: " + U.score1);
+        //System.out.println("highlight Received: " + U.score2);
+        //System.out.println("g Received: " + U.GameId);
 
         WebSocketMessage Playerscores = new WebSocketMessage("score1", U.score1, U.GameId, "none");
         Gson gsonNames1 = new Gson();
         String jsonPlayerscores = gsonNames1.toJson(Playerscores);
         broadcast(jsonPlayerscores);
-        System.out.println(jsonPlayerscores);
+        //System.out.println(jsonPlayerscores);
         WebSocketMessage Playerscores2 = new WebSocketMessage("score2", U.score2, U.GameId, "none");
     
         String jsonPlayerscores2 = gsonNames1.toJson(Playerscores2);
         broadcast(jsonPlayerscores2);
-        System.out.println(jsonPlayerscores2);
+        //System.out.println(jsonPlayerscores2);
      }
 
      if(eventType.equals("removeUsername")){
-        System.out.println("Username Received for Removal: " + U.userName);
+        //System.out.println("Username Received for Removal: " + U.userName);
         playerList.remove(U.userName);
         WebSocketMessage usernames = new WebSocketMessage("userNames", playerList, 0, "none");
         Gson gsonNames = new Gson();
         String jsonUsername = gsonNames.toJson(usernames);
         broadcast(jsonUsername);
-        System.out.println(jsonUsername);
+        //System.out.println(jsonUsername);
      }
 
      if(eventType.equals("removeWord")){
-        System.out.println("Word for Removal: " + U.wordHighlighted);
+        //System.out.println("Word for Removal: " + U.wordHighlighted);
         ArrayList<String> receivedWords = new ArrayList();
         receivedWords = U.wordList;
         receivedWords.remove(U.wordHighlighted);
@@ -191,7 +191,7 @@ import org.java_websocket.WebSocket;
         WebSocketMessage wordListMessage = new WebSocketMessage("WordList", receivedWords, U.GameId, "none");
         String jsonWordList = gson4.toJson(wordListMessage);
         broadcast(jsonWordList);
-        System.out.println(jsonWordList);
+        //System.out.println(jsonWordList);
 
      }
 
@@ -206,28 +206,28 @@ import org.java_websocket.WebSocket;
         WebSocketMessage colorUpdateMessage = new WebSocketMessage("colorUpdate", buttonArr, U.GameId, U.wordHighlighted);
         String jsonColorUpdate = gson4.toJson(colorUpdateMessage);
         broadcast(jsonColorUpdate);
-        System.out.println(jsonColorUpdate);
+        //System.out.println(jsonColorUpdate);
 
      }
 
      if(eventType.equals("gameStart")){
 
-        System.out.println("Checking to see if we can Start Game");
+        //System.out.println("Checking to see if we can Start Game");
         qPlayerList.add(U.userName);
         int qPlayerListSize = qPlayerList.size();
-        System.out.println(qPlayerListSize + " : Players Waiting");
+        //System.out.println(qPlayerListSize + " : Players Waiting");
 
         WebSocketMessage waiting = new WebSocketMessage("waiting", "waiting", 0, qPlayerList.get(0));
         String jsonWait = gson4.toJson(waiting);
         broadcast(jsonWait);
-        System.out.println(jsonWait);
+        //System.out.println(jsonWait);
 
 
         if(qPlayerListSize == 2){
 
-          System.out.println("Starting Game");
-          System.out.println("player blue is: " + qPlayerList.get(0));
-          System.out.println("Player red is: " + qPlayerList.get(1));
+          //System.out.println("Starting Game");
+          //System.out.println("player blue is: " + qPlayerList.get(0));
+          //System.out.println("Player red is: " + qPlayerList.get(1));
 
           //get two players from list and pull them out of qPlayerList
           String bluePlayer = qPlayerList.get(0);
@@ -247,12 +247,12 @@ import org.java_websocket.WebSocket;
           WebSocketMessage blueSet = new WebSocketMessage("giveColor", "blue", GameId, bluePlayer);
           String jsonBlue = gson4.toJson(blueSet);
           broadcast(jsonBlue);
-          System.out.println(jsonBlue);
+          //System.out.println(jsonBlue);
 
           WebSocketMessage bluePlayerSet = new WebSocketMessage("givePlayers", redPlayer, GameId, "blue");
           String jsonBluePlayer = gson4.toJson(bluePlayerSet);
           broadcast(jsonBluePlayer);
-          System.out.println(jsonBluePlayer);
+          //System.out.println(jsonBluePlayer);
 
 
           //set red player in game instance
@@ -262,15 +262,15 @@ import org.java_websocket.WebSocket;
           WebSocketMessage redSet = new WebSocketMessage("giveColor", "red", GameId, redPlayer);
           String jsonRed = gson4.toJson(redSet);
           broadcast(jsonRed);
-          System.out.println(jsonRed);
+          //System.out.println(jsonRed);
 
           WebSocketMessage redPlayerSet = new WebSocketMessage("givePlayers", bluePlayer, GameId, "red");
           String jsonRedPlayer = gson4.toJson(redPlayerSet);
           broadcast(jsonRedPlayer);
-          System.out.println(jsonRedPlayer);
+          //System.out.println(jsonRedPlayer);
 
           ActiveGames.add(G);
-          System.out.println("Starting Game");
+          //System.out.println("Starting Game");
 
           G.initializeGrid();
           G.populateGridWithWords();
@@ -288,11 +288,8 @@ import org.java_websocket.WebSocket;
           WebSocketMessage wordListMessage = new WebSocketMessage("WordList", usedWords, GameId, "none");
           String jsonWordList = gson4.toJson(wordListMessage);
           broadcast(jsonWordList);
-          System.out.println(jsonWordList);
-          
-            // TO DO FOR GAMESTART
-            //send wordbank
-            //comment out prints on delivery
+          //System.out.println(jsonWordList);
+        
         }
         
      }
