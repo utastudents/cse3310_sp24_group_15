@@ -18,7 +18,7 @@ public class GameTest extends TestCase {
      */
     public GameTest(String testName) {
         super(testName);
-        game = new Game(new Statistics()); // Assume Statistics is correctly set up for testing
+        game = new Game(); // Assume Statistics is correctly set up for testing
     }
 
     /**
